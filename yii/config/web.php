@@ -7,9 +7,15 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
+    ],
+    'modules' => [
+        'orders' => [
+            'class' => 'app\modules\orders\Orders',
+        ],
     ],
     'components' => [
         'request' => [
@@ -43,14 +49,16 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                    'order-list' => 'orders/orders/index',
+                'test' => 'orders/orders/test',
+
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];

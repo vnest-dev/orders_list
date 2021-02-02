@@ -14,13 +14,14 @@ services:
 
   db:
     image: mysql
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     volumes:
       - ./data/db:/var/lib/mysql
     env_file:
       - ./secret/dev.env
     ports:
-      - "8890:3306"
+      - "3306:3306"
 
 
 networks:
