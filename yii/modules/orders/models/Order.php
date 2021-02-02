@@ -29,8 +29,8 @@ class Order extends ActiveRecord
     const STATUS_FAILED = '4';
 
     //Mode constants
-    const MODE_MANUAL = 0;
-    const MODE_AUTO = 1;
+    const MODE_MANUAL = '0';
+    const MODE_AUTO = '1';
 
 
     public static function tableName()

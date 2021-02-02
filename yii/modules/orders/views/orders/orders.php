@@ -1,10 +1,9 @@
 <?php
 
 use app\modules\orders\models\Order;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+
 
 ?>
 <!DOCTYPE html>
@@ -55,32 +54,44 @@ use yii\widgets\LinkPager;
             <a href="<?= Url::toRoute(['index', 'status' => null]) ?>"><?= Yii::t('app', 'All orders') ?></a>
         </li>
         <li class="<?= Yii::$app->request->get('status') === Order::STATUS_PENDING ? 'active' : '' ?>"><a
-                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_PENDING]) ?>"><?= Yii::t('app', 'Pending') ?></a></li>
+                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_PENDING]) ?>"><?= Yii::t('app', 'Pending') ?></a>
+        </li>
         <li class="<?= Yii::$app->request->get('status') === Order::STATUS_INPROGRESS ? 'active' : '' ?>"><a
-                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_INPROGRESS]) ?>"><?= Yii::t('app', 'In progress') ?></a></li>
+                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_INPROGRESS]) ?>"><?= Yii::t('app', 'In progress') ?></a>
+        </li>
         <li class="<?= Yii::$app->request->get('status') === Order::STATUS_COMPLETED ? 'active' : '' ?>"><a
-                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_COMPLETED]) ?>"><?= Yii::t('app', 'Completed') ?></a></li>
+                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_COMPLETED]) ?>"><?= Yii::t('app', 'Completed') ?></a>
+        </li>
         <li class="<?= Yii::$app->request->get('status') === Order::STATUS_CANCELED ? 'active' : '' ?>"><a
-                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_CANCELED]) ?>"><?= Yii::t('app', 'Canceled') ?></a></li>
+                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_CANCELED]) ?>"><?= Yii::t('app', 'Canceled') ?></a>
+        </li>
         <li class="<?= Yii::$app->request->get('status') === Order::STATUS_FAILED ? 'active' : '' ?>"><a
-                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_FAILED]) ?>"><?= Yii::t('app', 'Error') ?></a></li>
+                    href="<?= Url::toRoute(['index', 'status' => Order::STATUS_FAILED]) ?>"><?= Yii::t('app', 'Error') ?></a>
+        </li>
 
         <li class="pull-right custom-search">
-            <form class="form-inline" action="/admin/orders" method="get">
+            <form class="form-inline"
+                  action="<?= Url::toRoute('index') ?>"
+                  method="get">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" value="" placeholder="Search orders">
+                    <?php if(array_key_exists('status', Yii::$app->request->get())): ?>
+                        <input type="text" name="status" value="<?= Yii::$app->request->get('status') ?>" hidden>
+                    <?php endif; ?>
+                        <input type="text" name="search" class="form-control" value="" placeholder="Search orders">
                     <span class="input-group-btn search-select-wrap">
 
             <select class="form-control search-select" name="search-type">
-              <option value="1" selected="">Order ID</option>
-              <option value="2">Link</option>
-              <option value="3">Username</option>
+              <option value="id" selected="">Order ID</option>
+              <option value="link">Link</option>
+              <option value="username">Username</option>
             </select>
             <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"
                                                                 aria-hidden="true"></span></button>
             </span>
                 </div>
             </form>
+
+
         </li>
     </ul>
     <table class="table order-table">
@@ -118,10 +129,15 @@ use yii\widgets\LinkPager;
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li class="<?= Yii::$app->request->get('mode') === '0' ? 'active' : '' ?>"><a href="">All</a>
+                        <li class="<?= !array_key_exists('mode', Yii::$app->request->get()) ? 'active' : '' ?>"><a
+                                    href="<?= Url::toRoute(['index', 'status' => Yii::$app->request->get('status')]) ?>"><?= Yii::t('app', 'All') ?></a>
                         </li>
-                        <li><a href=""><?= Yii::t('app', 'Manual') ?></a></li>
-                        <li><a href=""><?= Yii::t('app', 'Auto') ?></a></li>
+                        <li class="<?= Yii::$app->request->get('mode') === Order::MODE_MANUAL ? 'active' : '' ?>"><a
+                                    href="<?= Url::toRoute(['index', 'status' => Yii::$app->request->get('status'), 'mode' => Order::MODE_MANUAL]) ?>"><?= Yii::t('app', 'Manual') ?></a>
+                        </li>
+                        <li class="<?= Yii::$app->request->get('mode') === Order::MODE_AUTO ? 'active' : '' ?>"><a
+                                    href="<?= Url::toRoute(['index', 'status' => Yii::$app->request->get('status'), 'mode' => Order::MODE_AUTO]) ?>"><?= Yii::t('app', 'Auto') ?></a>
+                        </li>
                     </ul>
                 </div>
             </th>
@@ -138,7 +154,7 @@ use yii\widgets\LinkPager;
                 <td class="link"><?= $order->link ?></td>
                 <td><?= $order->quantity ?></td>
                 <td class="service">
-                    <span class="label-id">213</span>Likes
+                    <span class="label-id">213</span><?= $order->services->name ?>
                 </td>
                 <td>
                     <?php switch ($order->status) {

@@ -14,7 +14,8 @@ class OrdersController extends Controller
     public function actionIndex()
     {
         $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->get());
+        $searchModel->setFilters(Yii::$app->request->get());
+        $dataProvider = $searchModel->search();
 
 
         return $this->render('orders', [
