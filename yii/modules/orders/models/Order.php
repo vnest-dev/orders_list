@@ -47,13 +47,39 @@ class Order extends ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUsers()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getServices()
     {
         return $this->hasOne(Service::class, ['id' => 'service_id']);
     }
+
+    public static function getModes()
+    {
+        return [
+            'manual' => Order::MODE_MANUAL,
+            'auto'   => Order::MODE_AUTO
+        ];
+    }
+
+    public static function getStatuses()
+    {
+        return [
+            'pending'     => Order::STATUS_PENDING,
+            'in progress' => Order::STATUS_INPROGRESS,
+            'completed'   => Order::STATUS_COMPLETED,
+            'canceled'    => Order::STATUS_CANCELED,
+            'error'       => Order::STATUS_FAILED
+        ];
+    }
+
 }

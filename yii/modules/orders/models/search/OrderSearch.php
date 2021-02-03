@@ -10,10 +10,13 @@ use yii\helpers\ArrayHelper;
 class OrderSearch extends Order
 {
 
+    private $service;
+    private $username;
+
     public function rules()
     {
         return [
-            [['status', 'mode', 'id', 'link'], 'safe']
+            [['status', 'mode', 'id', 'link', 'service', 'username'], 'safe']
         ];
     }
 
@@ -36,7 +39,7 @@ class OrderSearch extends Order
 
     public function search()
     {
-        $query = Order::find()->with(['users', 'services']);
+        $query = Order::find()->with(['users', 'services'])->alias('o');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -44,22 +47,34 @@ class OrderSearch extends Order
             ]
         ]);
 
-
-        if($this->status !== null){
+        if ($this->status !== null) {
             $query->andFilterWhere(['=', 'status', $this->status]);
         }
 
-        if($this->mode !== null){
+        if ($this->mode !== null) {
             $query->andFilterWhere(['=', 'mode', $this->mode]);
         }
 
-        if($this->id !== null){
-            $query->andFilterWhere(['=', 'id', $this->id]);
+        if ($this->id !== null) {
+            $query->andFilterWhere(['=', 'o.id', $this->id]);
         }
 
-        if($this->link !== null){
+        if ($this->link !== null) {
             $query->andFilterWhere(['like', 'link', $this->link]);
         }
+
+        if ($this->service !== null) {
+            $query->andFilterWhere(['=', 's.name', $this->service]);
+        }
+
+        if ($this->username !== null) {
+            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
+            $query->andFilterWhere(['like', 'first_name', $this->username]);
+            $query->orFilterWhere(['like', 'last_name', $this->username]);
+        }
+
+        $query->joinWith('services s');
+        $query->joinWith('users u');
 
         return $dataProvider;
     }
