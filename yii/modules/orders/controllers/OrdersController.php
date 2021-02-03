@@ -51,5 +51,6 @@ class OrdersController extends Controller
 
         }
         $csvFile->close();
+        return $this->response->sendFile('csv/file2.csv');
     }
 }
