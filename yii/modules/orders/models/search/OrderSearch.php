@@ -37,13 +37,33 @@ class OrderSearch extends Order
 
     }
 
+    public function getServicesCounts()
+    {
+        $servicesCounts = Order::find()->select(['s.name', 'count(s.name) as count'])->joinWith('services s')->groupBy('s.name')->createCommand()->queryAll();
+        $allServicesCount = Order::find()->select(['count(*) as count'])->createCommand()->queryOne()['count'];
+
+        $servicesCounts = ArrayHelper::map($servicesCounts, 'name', 'count');
+        ArrayHelper::setValue($servicesCounts, 'All', $allServicesCount);
+
+        arsort($servicesCounts);
+
+        return $servicesCounts;
+    }
+
+
     public function search()
     {
         $query = Order::find()->with(['users', 'services'])->alias('o');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pagesize' => 100
+                'pagesize' => Yii::$app->params['records_on_page']
+            ]
+        ]);
+
+        $dataProvider->setSort([
+            'defaultOrder' => [
+                'id' => 'SORT_DESC'
             ]
         ]);
 
@@ -68,9 +88,13 @@ class OrderSearch extends Order
         }
 
         if ($this->username !== null) {
-            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
-            $query->andFilterWhere(['like', 'first_name', $this->username]);
-            $query->orFilterWhere(['like', 'last_name', $this->username]);
+            if(count(explode(' ', $this->username)) === 2){
+                $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
+            }
+            else {
+                $query->andFilterWhere(['like', 'first_name', $this->username]);
+                $query->orFilterWhere(['like', 'last_name', $this->username]);
+            }
         }
 
         $query->joinWith('services s');

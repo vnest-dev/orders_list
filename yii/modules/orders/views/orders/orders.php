@@ -64,14 +64,24 @@ use yii\helpers\ArrayHelper;
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <?php foreach ($servicesCounts as $service => $count): ?>
-                            <li><a href="<?= Url::toRoute(ArrayHelper::merge(['index', 'status' => Yii::$app->request->get('status'), 'service' => $service],
+                            <li>
+                                <a href="<?= Url::toRoute(ArrayHelper::merge(['index', 'status' => Yii::$app->request->get('status')],
+                                    $service !== 'All' ? ['service' => $service] : [],
                                     array_key_exists('search-type', Yii::$app->request->get()) && Yii::$app->request->get('search-type') !== null &&
                                     array_key_exists('search', Yii::$app->request->get()) && Yii::$app->request->get('search') !== null ?
                                         ['search' => Yii::$app->request->get('search'), 'search-type' => Yii::$app->request->get('search-type')] : [],
                                     array_key_exists('mode', Yii::$app->request->get()) && Yii::$app->request->get('mode') !== null ?
                                         ['mode' => Yii::$app->request->get('mode')] : []
                                 ))
-                                ?>"><span class="label-id"><?= $count ?></span> <?= $service ?></a></li>
+                                ?>">
+
+                                    <?php if ($service === 'All'): ?>
+                                        <?= $service . ' (' . $count . ')' ?>
+                                    <?php else: ?>
+                                        <span class="label-id"><?= $count ?></span> <?= $service ?>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
@@ -84,7 +94,7 @@ use yii\helpers\ArrayHelper;
                         Mode
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" >
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li class="<?= !array_key_exists('mode', Yii::$app->request->get()) ? 'active' : '' ?>"><a
                                     href="<?= Url::toRoute(ArrayHelper::merge(['index', 'status' => Yii::$app->request->get('status')],
                                         array_key_exists('search-type', Yii::$app->request->get()) && Yii::$app->request->get('search-type') !== null &&
@@ -119,7 +129,7 @@ use yii\helpers\ArrayHelper;
         foreach ($dataProvider->getModels() as $order): ?>
             <tr>
                 <td><?= $order->id ?></td>
-                <td><?= $order->users->first_name. ' ' .$order->users->last_name ?></td>
+                <td><?= $order->users->first_name . ' ' . $order->users->last_name ?></td>
                 <td class="link"><?= $order->link ?></td>
                 <td><?= $order->quantity ?></td>
                 <td class="service">
@@ -162,10 +172,19 @@ use yii\helpers\ArrayHelper;
 
         </div>
         <div class="col-sm-4 pagination-counters">
-            <?= $dataProvider->pagination->getOffset() + ($dataProvider->getCount() > 1 ? 1 : 0 )?>
+            <?= $dataProvider->pagination->getOffset() + ($dataProvider->getCount() > 1 ? 1 : 0) ?>
             to <?= $dataProvider->pagination->getOffset() + $dataProvider->getCount() ?>
             of <?= $dataProvider->getTotalCount() ?>
         </div>
+
+        <form action="<?= Url::toRoute('get-csv') ?>" method="get">
+            <?php foreach (Yii::$app->request->get() as $name => $value): ?>
+                <input type="hidden" name="<?= $name ?>" value="<?= $value ?>">
+            <?php endforeach; ?>
+            <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>" value="<?= Yii::$app->request->getCsrfToken() ?>"/>
+            <button type="submit" class="btn btn-primary">Save to file</button>
+        </form>
+
 
     </div>
 </div>

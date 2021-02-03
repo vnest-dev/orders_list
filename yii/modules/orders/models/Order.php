@@ -5,6 +5,7 @@ namespace app\modules\orders\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * Model for table orders
