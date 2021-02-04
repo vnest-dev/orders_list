@@ -53,7 +53,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                    'order-list' => 'orders/orders/index',
+                    'orders' => 'orders/orders/index',
                 'test' => 'orders/orders/test',
 
             ],
