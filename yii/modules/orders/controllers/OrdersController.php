@@ -11,7 +11,6 @@ use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\web\Controller;
 use yii2tech\csvgrid\CsvFile;
-use yii2tech\csvgrid\CsvGrid;
 
 class OrdersController extends Controller
 {
@@ -19,11 +18,38 @@ class OrdersController extends Controller
     {
         $this->layout = 'main';
 
+        if(Yii::$app->request->post()){
+            $params = Yii::$app->request->post();
+        }
+        else {
+            $params = Yii::$app->request->get();
+        }
+
         $searchModel = new OrderSearch();
-        $searchModel->setFilters(Yii::$app->request->get());
+        $searchModel->setFilters($params);
         $dataProvider = $searchModel->search();
 
+
         $servicesCounts = $searchModel->getServicesCounts();
+
+        if(Yii::$app->request->post()){
+            ob_start();
+            $fileName = date('YmdHis', time());
+            $stream = fopen('php://output', 'a');
+            header('Content-Disposition: attachment;filename="' . $fileName . '.csv"');
+            $maxRecordsInOutput = intdiv($dataProvider->getTotalCount(), 10);
+            $maxIterations = intdiv($dataProvider->getTotalCount(), $maxRecordsInOutput);
+            $maxIterations += fmod($maxIterations, $maxRecordsInOutput) > 0 ? 1 : 0;
+            for ($i = 0; $i < $maxIterations; $i++) {
+                foreach ($dataProvider->query->offset($i * $maxRecordsInOutput)->limit($maxRecordsInOutput)->createCommand()->queryAll() as $key => $order) {
+                    fputcsv($stream, $order);
+                }
+                ob_flush();
+                flush();
+            }
+            ob_end_clean();
+            exit;
+        }
 
         return $this->render('orders', [
             'dataProvider' => $dataProvider,
@@ -32,25 +58,5 @@ class OrdersController extends Controller
             'modes' => Order::getModes(),
             'statuses' => Order::getStatuses()
         ]);
-    }
-
-    public function actionGetCsv()
-    {
-        $this->layout = 'main';
-        $searchModel = new OrderSearch();
-        $searchModel->setFilters(Yii::$app->request->get());
-        $dataProvider = $searchModel->search();
-        $csvFile = new CsvFile(['name' => 'csv/file2.csv']);
-        $size = $dataProvider->getTotalCount() / Yii::$app->params['records_on_page'];
-        for ($page = 0; $page < $size; $page++) {
-            $dataProvider->pagination->setPage($page);
-            $providerClone = clone $dataProvider;
-            foreach ($providerClone->getModels() as $item) {
-                $csvFile->writeRow($item->attributes);
-            }
-
-        }
-        $csvFile->close();
-        return $this->response->sendFile('csv/file2.csv');
     }
 }

@@ -39,7 +39,11 @@ class OrderSearch extends Order
 
     public function getServicesCounts()
     {
-        $servicesCounts = Order::find()->select(['s.name', 'count(s.name) as count'])->joinWith('services s')->groupBy('s.name')->createCommand()->queryAll();
+        $servicesCounts = Order::find()->select(['s.name', 'count(s.name) as count'])
+            ->joinWith('services s')
+            ->groupBy('s.name')
+            ->createCommand()
+            ->queryAll();
         $allServicesCount = Order::find()->select(['count(*) as count'])->createCommand()->queryOne()['count'];
 
         $servicesCounts = ArrayHelper::map($servicesCounts, 'name', 'count');
@@ -53,7 +57,11 @@ class OrderSearch extends Order
 
     public function search()
     {
-        $query = Order::find()->with(['users', 'services'])->alias('o');
+        $query = Order::find()
+            ->with(['users', 'services'])
+            ->alias('o');
+
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
@@ -99,6 +107,7 @@ class OrderSearch extends Order
 
         $query->joinWith('services s');
         $query->joinWith('users u');
+
 
         return $dataProvider;
     }

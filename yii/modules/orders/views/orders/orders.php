@@ -177,7 +177,7 @@ use yii\helpers\ArrayHelper;
             of <?= $dataProvider->getTotalCount() ?>
         </div>
 
-        <form action="<?= Url::toRoute('get-csv') ?>" method="get">
+        <form action="<?= Url::toRoute('index') ?>" method="post">
             <?php foreach (Yii::$app->request->get() as $name => $value): ?>
                 <input type="hidden" name="<?= $name ?>" value="<?= $value ?>">
             <?php endforeach; ?>
