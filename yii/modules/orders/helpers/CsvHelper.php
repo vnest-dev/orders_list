@@ -3,6 +3,8 @@
 namespace app\modules\orders\helpers;
 
 
+use yii\data\ActiveDataProvider;
+
 /**
  * Helper class to compose csv from output buffer
  *
@@ -11,7 +13,7 @@ namespace app\modules\orders\helpers;
 class CsvHelper
 {
     /**
-     * @param $dataProvider
+     * @param $dataProvider ActiveDataProvider
      */
     public static
     function sendCsvFromBuffer($dataProvider)
