@@ -37,14 +37,14 @@ class OrderSearch extends Order
     {
         $filtersList = ['status', 'mode', 'service'];
         foreach ($filtersList as $filter) {
-            if (array_key_exists($filter, $params) && $params[$filter] !== null) {
+            if (ArrayHelper::keyExists($filter, $params) && $params[$filter] !== null) {
                 $this->$filter = $params[$filter];
             }
         }
 
         //search set
-        if (array_key_exists('search-type', $params) && $params['search-type'] !== null &&
-            array_key_exists('search', $params) && $params['search'] !== null) {
+        if (ArrayHelper::keyExists('search-type', $params) && $params['search-type'] !== null &&
+            ArrayHelper::keyExists('search', $params) && $params['search'] !== null) {
             $this->{$params['search-type']} = $params['search'];
         }
     }
