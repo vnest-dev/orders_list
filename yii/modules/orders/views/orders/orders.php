@@ -4,6 +4,12 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use yii\helpers\ArrayHelper;
 
+/**
+ * @var array $statuses
+ * @var array $servicesCounts
+ * @var array $modes
+ * @var yii\data\ActiveDataProvider $dataProvider
+ */
 ?>
 
 <div class="container-fluid">
@@ -151,9 +157,6 @@ use yii\helpers\ArrayHelper;
                             break;
                         case 4:
                             echo "Failed";
-                            break;
-                        default:
-                            echo "Pending";
                             break;
                     } ?>
                 </td>

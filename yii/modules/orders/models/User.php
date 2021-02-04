@@ -6,7 +6,7 @@ namespace app\modules\orders\models;
 use yii\db\ActiveRecord;
 
 /**
- * Model for table orders
+ * Model for table {{ users }}
  * @package app\modules\orders\models
  *
  * @property int $id

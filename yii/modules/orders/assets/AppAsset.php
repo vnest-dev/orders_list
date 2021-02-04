@@ -4,6 +4,12 @@ namespace app\modules\orders\assets;
 
 use yii\web\AssetBundle;
 
+/**
+ * Class AppAsset
+ * Modules asset class
+ *
+ * @package app\modules\orders\assets
+ */
 class AppAsset extends AssetBundle
 {
     public $sourcePath = '@app/modules/orders/assets';

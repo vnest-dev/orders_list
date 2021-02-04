@@ -2,61 +2,54 @@
 
 namespace app\modules\orders\controllers;
 
-
+use app\modules\orders\helpers\CsvHelper;
 use app\modules\orders\models\Order;
-use app\modules\orders\models\Service;
 use Yii;
 use app\modules\orders\models\search\OrderSearch;
-use yii\data\ActiveDataProvider;
-use yii\data\Pagination;
 use yii\web\Controller;
-use yii2tech\csvgrid\CsvFile;
 
+/**
+ * Class OrdersController
+ * Controller for orders
+ *
+ * @package app\modules\orders\controllers
+ */
 class OrdersController extends Controller
 {
+    /**
+     * Renders orders table, POST query sends csv file of curtain configuration to user
+     *
+     * @return string
+     * @throws \yii\db\Exception
+     */
     public function actionIndex()
     {
         $this->layout = 'main';
 
-        if(Yii::$app->request->post()){
+        if (Yii::$app->request->post()) {
             $params = Yii::$app->request->post();
-        }
-        else {
+        } else {
             $params = Yii::$app->request->get();
         }
 
         $searchModel = new OrderSearch();
         $searchModel->setFilters($params);
         $dataProvider = $searchModel->search();
-
-
         $servicesCounts = $searchModel->getServicesCounts();
 
-        if(Yii::$app->request->post()){
-            ob_start();
-            $fileName = date('YmdHis', time());
-            $stream = fopen('php://output', 'a');
-            header('Content-Disposition: attachment;filename="' . $fileName . '.csv"');
-            $maxRecordsInOutput = intdiv($dataProvider->getTotalCount(), 10);
-            $maxIterations = intdiv($dataProvider->getTotalCount(), $maxRecordsInOutput);
-            $maxIterations += fmod($maxIterations, $maxRecordsInOutput) > 0 ? 1 : 0;
-            for ($i = 0; $i < $maxIterations; $i++) {
-                foreach ($dataProvider->query->offset($i * $maxRecordsInOutput)->limit($maxRecordsInOutput)->createCommand()->queryAll() as $key => $order) {
-                    fputcsv($stream, $order);
-                }
-                ob_flush();
-                flush();
-            }
-            ob_end_clean();
-            exit;
+        if (Yii::$app->request->post()) {
+            CsvHelper::sendCsvFromBuffer($dataProvider);
         }
 
-        return $this->render('orders', [
-            'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
-            'servicesCounts' => $servicesCounts,
-            'modes' => Order::getModes(),
-            'statuses' => Order::getStatuses()
-        ]);
+        return $this->render(
+            'orders',
+            [
+                'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+                'servicesCounts' => $servicesCounts,
+                'modes' => Order::getModes(),
+                'statuses' => Order::getStatuses()
+            ]
+        );
     }
 }

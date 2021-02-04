@@ -2,13 +2,10 @@
 
 namespace app\modules\orders\models;
 
-
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
 
 /**
- * Model for table orders
+ * Model for table {{ orders }}
  * @package app\modules\orders\models
  *
  * @property int $id
@@ -22,23 +19,26 @@ use yii\helpers\ArrayHelper;
 class Order extends ActiveRecord
 {
 
-    // Status constants
-    const STATUS_PENDING = '0';
-    const STATUS_INPROGRESS = '1';
-    const STATUS_COMPLETED = '2';
-    const STATUS_CANCELED = '3';
-    const STATUS_FAILED = '4';
+    public const STATUS_PENDING = '0';
+    public const STATUS_INPROGRESS = '1';
+    public const STATUS_COMPLETED = '2';
+    public const STATUS_CANCELED = '3';
+    public const STATUS_FAILED = '4';
 
-    //Mode constants
-    const MODE_MANUAL = '0';
-    const MODE_AUTO = '1';
+    public const MODE_MANUAL = '0';
+    public const MODE_AUTO = '1';
 
-
+    /**
+     * @return string
+     */
     public static function tableName()
     {
         return 'orders';
     }
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -49,6 +49,8 @@ class Order extends ActiveRecord
     }
 
     /**
+     * Relation with users
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getUsers()
@@ -57,6 +59,8 @@ class Order extends ActiveRecord
     }
 
     /**
+     * Relation with services
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getServices()
@@ -64,22 +68,30 @@ class Order extends ActiveRecord
         return $this->hasOne(Service::class, ['id' => 'service_id']);
     }
 
+    /**
+     * Get modes constants array
+     * @return string[]
+     */
     public static function getModes()
     {
         return [
             'manual' => Order::MODE_MANUAL,
-            'auto'   => Order::MODE_AUTO
+            'auto' => Order::MODE_AUTO
         ];
     }
 
+    /**
+     * Get statuses constants array
+     * @return string[]
+     */
     public static function getStatuses()
     {
         return [
-            'pending'     => Order::STATUS_PENDING,
+            'pending' => Order::STATUS_PENDING,
             'in progress' => Order::STATUS_INPROGRESS,
-            'completed'   => Order::STATUS_COMPLETED,
-            'canceled'    => Order::STATUS_CANCELED,
-            'error'       => Order::STATUS_FAILED
+            'completed' => Order::STATUS_COMPLETED,
+            'canceled' => Order::STATUS_CANCELED,
+            'error' => Order::STATUS_FAILED
         ];
     }
 
