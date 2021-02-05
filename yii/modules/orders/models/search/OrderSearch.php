@@ -7,6 +7,9 @@ use app\modules\orders\models\Service;
 use app\modules\orders\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\data\SqlDataProvider;
+use yii\db\Query;
+use yii\db\QueryBuilder;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -26,7 +29,8 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['status', 'mode', 'id', 'link', 'service', 'username'], 'safe']
+            [['link', 'service', 'username'], 'safe'],
+            [['status', 'mode', 'id'], 'int']
         ];
     }
 
@@ -36,15 +40,17 @@ class OrderSearch extends Order
     public function setFilters($params)
     {
         $filtersList = ['status', 'mode', 'service'];
+
         foreach ($filtersList as $filter) {
-            if (ArrayHelper::keyExists($filter, $params) && $params[$filter] !== null) {
-                $this->$filter = $params[$filter];
+            if (ArrayHelper::keyExists($filter, $params) && $params[$filter] !== null) {// checking if filter is in params string
+                $this->$filter = $filter === 'mode' ? Order::getModes(
+                )[$params[$filter]] : ($filter === 'status' ? Order::getStatuses()[$params[$filter]] : $params[$filter]);
             }
         }
 
-        //search set
-        if (ArrayHelper::keyExists('search-type', $params) && $params['search-type'] !== null &&
-            ArrayHelper::keyExists('search', $params) && $params['search'] !== null) {
+        //search sets
+        if (ArrayHelper::keyExists('search', $params) && $params['search'] !== null &&
+            ArrayHelper::keyExists('search-type', $params) && $params['search-type'] !== null ) {// checking if filter is in params string
             $this->{$params['search-type']} = $params['search'];
         }
     }
@@ -56,12 +62,20 @@ class OrderSearch extends Order
      */
     public function getServicesCounts()
     {
-        $servicesCounts = Order::find()->select(['s.name', 'count(s.name) as count'])
-            ->joinWith('services s')
+        $servicesCounts = (new Query())
+            ->select(['s.name', 'count(s.name) as count'])
+            ->from('orders o')
+            ->leftJoin('services s', 'o.service_id = s.id')
             ->groupBy('s.name')
             ->createCommand()
             ->queryAll();
-        $allServicesCount = Order::find()->select(['count(*) as count'])->createCommand()->queryOne()['count'];
+
+        $allServicesCount = (new Query())
+            ->select(['count(s.name) as count'])
+            ->from('orders o')
+            ->leftJoin('services s', 'o.service_id = s.id')
+            ->createCommand()
+            ->queryOne()['count'];
 
         $servicesCounts = ArrayHelper::map($servicesCounts, 'name', 'count');
         ArrayHelper::setValue($servicesCounts, 'All', $allServicesCount);
@@ -71,6 +85,44 @@ class OrderSearch extends Order
         return $servicesCounts;
     }
 
+    public static function processStatuses($currentStatus)
+    {
+        $statusAliases = Order::getStatuses();
+
+        $statusesArray = [];
+        foreach ($statusAliases as $alias => $number){
+            $statusesArray[$number] = [
+                'name' => ucfirst($alias),
+                'isActive' => $alias === $currentStatus,
+                'link' => ['index', 'status' => $alias]
+            ];
+        }
+
+        return $statusesArray;
+    }
+
+    public static function processFilterElements($name, $elements, $query)
+    {
+        if(!ArrayHelper::keyExists($name, $query) || $query[$name] === null){ // checking if filter is in query string
+            $query[$name] = array_keys($elements)[0];
+        }
+
+        $modesArray = [];
+
+        $b = $name === 'search' ? ['status' => $query['status']] : ($name === 'status' ? [] : $query);
+        $link = ArrayHelper::merge(['index'], $b);
+
+        foreach ($elements as $alias => $number){
+            $link[$name] = $alias;
+            $modesArray[$number] = [
+                'name' => ucfirst($alias),
+                'isActive' => $alias === $query[$name],
+                'link' => $link
+            ];
+        }
+
+        return $modesArray;
+    }
 
     /**
      * Search function for orders
@@ -79,9 +131,12 @@ class OrderSearch extends Order
      */
     public function search()
     {
-        $query = Order::find()
-            ->with(['users', 'services'])
-            ->alias('o');
+        $query = (new Query())
+            ->select(['o.id', 'first_name','last_name', 'link','quantity','created_at', 'status', 'mode', 'name' ])
+            ->from('orders o')
+            ->leftJoin('users u', 'o.user_id = u.id')
+            ->leftJoin('services s', 'o.service_id = s.id')
+            ->orderBy('o.id DESC');
 
 
         $dataProvider = new ActiveDataProvider(
@@ -93,46 +148,12 @@ class OrderSearch extends Order
             ]
         );
 
-        $dataProvider->setSort(
-            [
-                'defaultOrder' => [
-                    'id' => 'SORT_DESC'
-                ]
-            ]
-        );
-
-        if ($this->status !== null) {
             $query->andFilterWhere(['=', 'status', $this->status]);
-        }
-
-        if ($this->mode !== null) {
             $query->andFilterWhere(['=', 'mode', $this->mode]);
-        }
-
-        if ($this->id !== null) {
             $query->andFilterWhere(['=', 'o.id', $this->id]);
-        }
-
-        if ($this->link !== null) {
             $query->andFilterWhere(['like', 'link', $this->link]);
-        }
-
-        if ($this->service !== null) {
             $query->andFilterWhere(['=', 's.name', $this->service]);
-        }
-
-        if ($this->username !== null) {
-            if (count(explode(' ', $this->username)) === 2) {
-                $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
-            } else {
-                $query->andFilterWhere(['like', 'first_name', $this->username]);
-                $query->orFilterWhere(['like', 'last_name', $this->username]);
-            }
-        }
-
-        $query->joinWith('services s');
-        $query->joinWith('users u');
-
+            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", trim($this->username)]);
 
         return $dataProvider;
     }

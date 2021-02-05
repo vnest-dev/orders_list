@@ -14,30 +14,21 @@ use yii\helpers\ArrayHelper;
 
 <div class="container-fluid">
     <ul class="nav nav-tabs p-b">
-        <li class="<?= !ArrayHelper::keyExists('status', Yii::$app->request->get()) ? 'active' : '' ?>">
-            <a href="<?= Url::toRoute(['index', 'status' => null]) ?>"><?= Yii::t('app', 'All orders') ?></a>
-        </li>
-        <?php
-        foreach ($statuses as $status => $value): ?>
-            <li class="<?= Yii::$app->request->get('status') === $value ? 'active' : '' ?>"><a
-                        href="<?= Url::toRoute(['index', 'status' => $value]) ?>"><?= Yii::t(
-                        'app',
-                        ucfirst($status)
-                    ) ?></a>
+
+        <?php  foreach ($statuses as $key => $status): ?>
+            <li class="<?= $status['isActive'] ? 'active' : '' ?>">
+                <a href="<?= Url::toRoute($status['link']) ?>"><?= Yii::t('app', $status['name']) ?></a>
             </li>
-        <?php
-        endforeach; ?>
+        <?php endforeach; ?>
 
         <li class="pull-right custom-search">
             <form class="form-inline"
                   action="<?= Url::toRoute('index') ?>"
                   method="get">
                 <div class="input-group">
-                    <?php
-                    if (ArrayHelper::keyExists('status', Yii::$app->request->get())): ?>
+                    <?php  if (ArrayHelper::keyExists('status', Yii::$app->request->get())): ?>
                         <input type="text" name="status" value="<?= Yii::$app->request->get('status') ?>" hidden>
-                    <?php
-                    endif; ?>
+                    <?php endif; ?>
                     <input type="text" name="search" class="form-control"
                            value="<?= ArrayHelper::keyExists('search', Yii::$app->request->get()) &&
                            Yii::$app->request->get('search') !== null ? Yii::$app->request->get('search') : '' ?>"
@@ -76,8 +67,7 @@ use yii\helpers\ArrayHelper;
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <?php
-                        foreach ($servicesCounts as $service => $count): ?>
+                        <?php  foreach ($servicesCounts as $service => $count): ?>
                             <li>
                                 <a href="<?= Url::toRoute(
                                     ArrayHelper::merge(
@@ -104,18 +94,14 @@ use yii\helpers\ArrayHelper;
                                 )
                                 ?>">
 
-                                    <?php
-                                    if ($service === 'All'): ?>
+                                    <?php  if ($service === 'All'): ?>
                                         <?= $service . ' (' . $count . ')' ?>
-                                    <?php
-                                    else: ?>
+                                    <?php else: ?>
                                         <span class="label-id"><?= $count ?></span> <?= $service ?>
-                                    <?php
-                                    endif; ?>
+                                    <?php endif; ?>
                                 </a>
                             </li>
-                        <?php
-                        endforeach; ?>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </th>
@@ -128,64 +114,10 @@ use yii\helpers\ArrayHelper;
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li class="<?= !ArrayHelper::keyExists('mode', Yii::$app->request->get()) ? 'active' : '' ?>"><a
-                                    href="<?= Url::toRoute(
-                                        ArrayHelper::merge(
-                                            ['index', 'status' => Yii::$app->request->get('status')],
-                                            ArrayHelper::keyExists(
-                                                'search-type',
-                                                Yii::$app->request->get()
-                                            ) && Yii::$app->request->get('search-type') !== null &&
-                                            ArrayHelper::keyExists(
-                                                'search',
-                                                Yii::$app->request->get()
-                                            ) && Yii::$app->request->get('search') !== null ?
-                                                [
-                                                    'search' => Yii::$app->request->get('search'),
-                                                    'search-type' => Yii::$app->request->get('search-type')
-                                                ] : [],
-                                            ArrayHelper::keyExists(
-                                                'service',
-                                                Yii::$app->request->get()
-                                            ) && Yii::$app->request->get('service') !== null ?
-                                                ['service' => Yii::$app->request->get('service')] : []
-                                        )
-                                    )
-                                    ?>"><?= Yii::t('app', 'All') ?></a>
-                        </li>
-                        <?php
-                        foreach ($modes as $mode => $value): ?>
-                            <li class="<?= Yii::$app->request->get('mode') === $value ? 'active' : '' ?>"><a
-                                        href="<?= Url::toRoute(
-                                            ArrayHelper::merge(
-                                                [
-                                                    'index',
-                                                    'status' => Yii::$app->request->get('status'),
-                                                    'mode' => $value
-                                                ],
-                                                ArrayHelper::keyExists(
-                                                    'search-type',
-                                                    Yii::$app->request->get()
-                                                ) && Yii::$app->request->get('search-type') !== null &&
-                                                ArrayHelper::keyExists(
-                                                    'search',
-                                                    Yii::$app->request->get()
-                                                ) && Yii::$app->request->get('search') !== null ?
-                                                    [
-                                                        'search' => Yii::$app->request->get('search'),
-                                                        'search-type' => Yii::$app->request->get('search-type')
-                                                    ] : [],
-                                                ArrayHelper::keyExists(
-                                                    'service',
-                                                    Yii::$app->request->get()
-                                                ) && Yii::$app->request->get('service') !== null ?
-                                                    ['service' => Yii::$app->request->get('service')] : []
-                                            )
-                                        )
-                                        ?>"><?= Yii::t('app', ucfirst($mode)) ?></a>
+                        <?php  foreach ($modes as $key => $mode): ?>
+                            <li class="<?= $mode['isActive'] ? 'active' : '' ?>"><a href="<?= Url::toRoute($mode['link']) ?>"><?= Yii::t('app', $mode['name']) ?></a>
                             </li>
-                        <?php
-                        endforeach; ?>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </th>
@@ -193,24 +125,21 @@ use yii\helpers\ArrayHelper;
         </tr>
         </thead>
         <tbody>
-        <?php
-
-        foreach ($dataProvider->getModels() as $order): ?>
+        <?php foreach ($dataProvider->getModels() as $order): ?>
             <tr>
-                <td><?= $order->id ?></td>
-                <td><?= $order->users->first_name . ' ' . $order->users->last_name ?></td>
-                <td class="link"><?= $order->link ?></td>
-                <td><?= $order->quantity ?></td>
+                <td><?= $order['id'] ?></td>
+                <td><?= $order["first_name"] . ' ' . $order["last_name"] ?></td>
+                <td class="link"><?= $order["link"] ?></td>
+                <td><?= $order["quantity"] ?></td>
                 <td class="service">
-                    <span class="label-id"><?= $servicesCounts[$order->services->name] ?></span> <?= $order->services->name ?>
+                    <span class="label-id"><?= $servicesCounts[$order["name"]] ?></span> <?= $order["name"] ?>
                 </td>
                 <td>
-                    <?php
-                    switch ($order->status) {
-                        case 0:
+                    <?php  switch ($order["status"]) {
+                        case \app\modules\orders\models\Order::STATUS_PENDING:
                             echo "Pending";
                             break;
-                        case 1:
+                        case \app\modules\orders\models\Order::STATUS_INPROGRESS:
                             echo "In progress";
                             break;
                         case 2:
@@ -224,11 +153,10 @@ use yii\helpers\ArrayHelper;
                             break;
                     } ?>
                 </td>
-                <td><?= $order->mode == 0 ? Yii::t('app', 'Manual') : Yii::t('app', 'Auto') ?></td>
-                <td><?= Yii::$app->formatter->asDatetime($order->created_at, 'YYYY-mm-dd H:m:s') ?></td>
+                <td><?= $order["mode"] == 0 ? Yii::t('app', 'Manual') : Yii::t('app', 'Auto') ?></td>
+                <td><?= Yii::$app->formatter->asDatetime($order["created_at"], 'YYYY-mm-dd H:m:s') ?></td>
             </tr>
-        <?php
-        endforeach; ?>
+        <?php endforeach; ?>
         </tbody>
     </table>
     <div class="row">
@@ -242,25 +170,20 @@ use yii\helpers\ArrayHelper;
 
         </div>
         <div class="col-sm-4 pagination-counters">
-            <?php
-            if ($dataProvider->getTotalCount() >= Yii::$app->params['records_on_page']): ?>
+            <?php  if ($dataProvider->getTotalCount() >= Yii::$app->params['records_on_page']): ?>
                 <?= $dataProvider->pagination->getOffset() + ($dataProvider->getCount() > 1 ? 1 : 0) ?>
                 to <?= $dataProvider->pagination->getOffset() + $dataProvider->getCount() ?>
                 of <?= $dataProvider->getTotalCount() ?>
             <?php else: ?>
                 <?=  $dataProvider->getCount() ?>
-            <?php
-            endif; ?>
+            <?php endif; ?>
         </div>
 
-        <?php
-        if ($dataProvider->getTotalCount() > 0): ?>
-            <form action="<?= Url::toRoute('index') ?>" method="post">
-                <?php
-                foreach (Yii::$app->request->get() as $name => $value): ?>
+        <?php  if ($dataProvider->getTotalCount() > 0): ?>
+            <form action="<?= Url::toRoute('download') ?>" method="post">
+                <?php  foreach (Yii::$app->request->get() as $name => $value): ?>
                     <input type="hidden" name="<?= $name ?>" value="<?= $value ?>">
-                <?php
-                endforeach; ?>
+                <?php endforeach; ?>
                 <input type="hidden" name="<?= Yii::$app->request->csrfParam ?>"
                        value="<?= Yii::$app->request->getCsrfToken() ?>"/>
                 <div class="col-md-10"></div>
@@ -269,8 +192,7 @@ use yii\helpers\ArrayHelper;
                 </div>
 
             </form>
-        <?php
-        endif; ?>
+        <?php endif; ?>
 
     </div>
 </div>

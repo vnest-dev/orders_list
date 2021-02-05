@@ -1,7 +1,6 @@
 <?php
 
 namespace app\modules\orders\models;
-
 use yii\db\ActiveRecord;
 
 /**
@@ -19,14 +18,14 @@ use yii\db\ActiveRecord;
 class Order extends ActiveRecord
 {
 
-    public const STATUS_PENDING = '0';
-    public const STATUS_INPROGRESS = '1';
-    public const STATUS_COMPLETED = '2';
-    public const STATUS_CANCELED = '3';
-    public const STATUS_FAILED = '4';
+    public const STATUS_PENDING = 0;
+    public const STATUS_INPROGRESS = 1;
+    public const STATUS_COMPLETED = 2;
+    public const STATUS_CANCELED = 3;
+    public const STATUS_FAILED = 4;
 
-    public const MODE_MANUAL = '0';
-    public const MODE_AUTO = '1';
+    public const MODE_MANUAL = 0;
+    public const MODE_AUTO = 1;
 
     /**
      * @return string
@@ -75,6 +74,7 @@ class Order extends ActiveRecord
     public static function getModes()
     {
         return [
+            'all' => null,
             'manual' => Order::MODE_MANUAL,
             'auto' => Order::MODE_AUTO
         ];
@@ -87,6 +87,7 @@ class Order extends ActiveRecord
     public static function getStatuses()
     {
         return [
+            'all orders' => null,
             'pending' => Order::STATUS_PENDING,
             'in progress' => Order::STATUS_INPROGRESS,
             'completed' => Order::STATUS_COMPLETED,
@@ -94,5 +95,6 @@ class Order extends ActiveRecord
             'error' => Order::STATUS_FAILED
         ];
     }
+
 
 }

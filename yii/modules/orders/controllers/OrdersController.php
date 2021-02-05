@@ -3,6 +3,7 @@
 namespace app\modules\orders\controllers;
 
 use app\modules\orders\helpers\CsvHelper;
+use app\modules\orders\helpers\FiltersHelper;
 use app\modules\orders\models\Order;
 use Yii;
 use app\modules\orders\models\search\OrderSearch;
@@ -16,8 +17,22 @@ use yii\web\Controller;
  */
 class OrdersController extends Controller
 {
+
+    public function behaviors()
+    {
+        return [
+        'verbs' => [
+            'class' => \yii\filters\VerbFilter::className(),
+            'actions' => [
+                'index'  => ['GET'],
+                'download' => ['POST']
+            ],
+        ],
+    ];
+    }
+
     /**
-     * Renders orders table, POST query sends csv file of curtain configuration to user
+     * Renders orders table
      *
      * @return string
      * @throws \yii\db\Exception
@@ -26,20 +41,14 @@ class OrdersController extends Controller
     {
         $this->layout = 'main';
 
-        if (Yii::$app->request->post()) {
-            $params = Yii::$app->request->post();
-        } else {
-            $params = Yii::$app->request->get();
-        }
-
         $searchModel = new OrderSearch();
-        $searchModel->setFilters($params);
+        $searchModel->setFilters(Yii::$app->request->get());
         $dataProvider = $searchModel->search();
         $servicesCounts = $searchModel->getServicesCounts();
 
-        if (Yii::$app->request->post()) {
-            CsvHelper::sendCsvFromBuffer($dataProvider);
-        }
+        $statuses = OrderSearch::processFilterElements('status', Order::getStatuses(), Yii::$app->request->get());
+        $modes = OrderSearch::processFilterElements('mode', Order::getModes(), Yii::$app->request->get());
+
 
         return $this->render(
             'orders',
@@ -47,9 +56,20 @@ class OrdersController extends Controller
                 'dataProvider' => $dataProvider,
                 'searchModel' => $searchModel,
                 'servicesCounts' => $servicesCounts,
-                'modes' => Order::getModes(),
-                'statuses' => Order::getStatuses()
+                'modes' => $modes,
+                'statuses' => $statuses
             ]
         );
+    }
+
+    /**
+     * Sends csv file to user
+     */
+    public function actionDownload()
+    {
+            $searchModel = new OrderSearch();
+            $searchModel->setFilters(Yii::$app->request->post());
+            $dataProvider = $searchModel->search();
+            CsvHelper::sendCsvFromBuffer($dataProvider);
     }
 }
