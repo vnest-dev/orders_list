@@ -30,12 +30,6 @@ class m210202_062124_indexes_orders extends Migration
         );
 
         $this->createIndex(
-            'orders_status_index',
-            'orders',
-            'status'
-        );
-
-        $this->createIndex(
             'orders_status_mode_index',
             'orders',
             ['status', 'mode']
@@ -51,12 +45,6 @@ class m210202_062124_indexes_orders extends Migration
             'orders_status_service_id_index',
             'orders',
             ['status', 'service_id']
-        );
-
-        $this->createIndex(
-            'orders_mode_index',
-            'orders',
-            'mode'
         );
 
         $this->createIndex(
@@ -88,11 +76,6 @@ class m210202_062124_indexes_orders extends Migration
         );
 
         $this->dropIndex(
-            'orders_status_index',
-            'orders',
-        );
-
-        $this->dropIndex(
             'orders_status_mode_index',
             'orders',
         );
@@ -104,11 +87,6 @@ class m210202_062124_indexes_orders extends Migration
 
         $this->dropIndex(
             'orders_status_service_id_index',
-            'orders',
-        );
-
-        $this->dropIndex(
-            'orders_mode_index',
             'orders',
         );
 
