@@ -124,6 +124,14 @@ class OrderSearch extends Order
         return $modesArray;
     }
 
+    public function processData($dataProvider)
+    {
+        foreach ($dataProvider->getModels() as $data){
+            $data['status'] = array_search($data['status'], Order::getStatuses());
+            $data['mode'] = array_search($data['mode'], Order::getModes());
+        }
+    }
+
     /**
      * Search function for orders
      *

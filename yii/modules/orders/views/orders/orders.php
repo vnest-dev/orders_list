@@ -135,23 +135,7 @@ use yii\helpers\ArrayHelper;
                     <span class="label-id"><?= $servicesCounts[$order["name"]] ?></span> <?= $order["name"] ?>
                 </td>
                 <td>
-                    <?php  switch ($order["status"]) {
-                        case \app\modules\orders\models\Order::STATUS_PENDING:
-                            echo "Pending";
-                            break;
-                        case \app\modules\orders\models\Order::STATUS_INPROGRESS:
-                            echo "In progress";
-                            break;
-                        case 2:
-                            echo "Completed";
-                            break;
-                        case 3:
-                            echo "Canceled";
-                            break;
-                        case 4:
-                            echo "Failed";
-                            break;
-                    } ?>
+                    <?= $order["status"] ?>
                 </td>
                 <td><?= $order["mode"] == 0 ? Yii::t('app', 'Manual') : Yii::t('app', 'Auto') ?></td>
                 <td><?= Yii::$app->formatter->asDatetime($order["created_at"], 'YYYY-mm-dd H:m:s') ?></td>
