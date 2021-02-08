@@ -1,30 +1,32 @@
 version: "3.1"
 services:
-
   web:
-    image: sreine/yii2-apcu
+    image: ${WEB_IMAGE}
     restart: always
     volumes:
-      - ./yii:/app
-      - ./data/conf:/etc/apache2/sites-available
-      - ./data/logs:/var/log/apache2
+      - ${ROOT_DIR}:/app
+      - ${SERVER_CONF_DIR}:/etc/apache2/sites-available
+      - ${LOGS_DIR}:/var/log/apache2
     ports:
-      - "80:80"
-      - "443:443"
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
 
   db:
-    image: mysql
+    image: ${DB_IMAGE}
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     volumes:
-      - ./data/db:/var/lib/mysql
-    env_file:
-      - ./secret/dev.env
+      - ${DB_STORAGE_DIR}:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
 
 
 networks:
   default:
     external:
-      name: amp-yii
+      name: amp-yii_temp
