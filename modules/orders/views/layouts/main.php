@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use app\modules\orders\assets\AppAsset;
+use orders\assets\AppAsset;
 
 AppAsset::register($this);
 ?>
@@ -49,7 +49,6 @@ AppAsset::register($this);
     </div>
 </nav>
 <?= $content ?>
-
 <?php $this->endBody() ?>
 </body>
 </html>

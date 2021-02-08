@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\orders\models;
+namespace orders\models;
 use yii\db\ActiveRecord;
 
 /**
  * Model for table {{ orders }}
- * @package app\modules\orders\models
+ * @package orders\models
  *
  * @property int $id
  * @property int $user_id

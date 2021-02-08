@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\orders\models\search;
+namespace orders\models\search;
 
-use app\modules\orders\models\Order;
-use app\modules\orders\models\Service;
-use app\modules\orders\models\User;
+use orders\models\Order;
+use orders\models\Service;
+use orders\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\SqlDataProvider;
@@ -29,8 +29,10 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['link', 'service'], 'safe'],
-            [['status', 'mode', 'id'], 'number'],
+            [['link', 'service', 'status', 'mode', 'id'], 'safe'],
+            ['mode', 'default', 'value'=>'all'],
+            ['status', 'default', 'value'=>'all orders'],
+
             [['username'], 'trim']
         ];
     }
@@ -40,20 +42,21 @@ class OrderSearch extends Order
      */
     public function setFilters($params)
     {
-        $filtersList = ['status', 'mode', 'service'];
+       foreach ($params as $key => $param){
+           $this->{$key} = $param;
+       }
+    }
 
-        foreach ($filtersList as $filter) {
-            if (ArrayHelper::keyExists($filter, $params) && $params[$filter] !== null) {// checking if filter is in params string
-                $this->$filter = $filter === 'mode' ? Order::getModes(
-                )[$params[$filter]] : ($filter === 'status' ? Order::getStatuses()[$params[$filter]] : $params[$filter]);
-            }
-        }
-
-        //search sets
-        if (ArrayHelper::keyExists('search', $params) && $params['search'] !== null &&
-            ArrayHelper::keyExists('search-type', $params) && $params['search-type'] !== null ) {// checking if filter is in params string
-            $this->{$params['search-type']} = $params['search'];
-        }
+    /**
+     * @param $params
+     * @return array
+     */
+    public function getFilters()
+    {
+       return [
+           'mode' => $this->mode,
+           'status' => $this->status
+       ];
     }
 
     /**
@@ -61,9 +64,9 @@ class OrderSearch extends Order
      * @return array
      * @throws \yii\db\Exception
      */
-    public function getServicesCounts()
+    public function getServices()
     {
-        $servicesCounts = (new Query())
+        $services = (new Query())
             ->select(['s.name', 'count(s.name) as count'])
             ->from('orders o')
             ->leftJoin('services s', 'o.service_id = s.id')
@@ -77,60 +80,14 @@ class OrderSearch extends Order
             ->leftJoin('services s', 'o.service_id = s.id')
             ->scalar();
 
-        $servicesCounts = ArrayHelper::map($servicesCounts, 'name', 'count');
-        ArrayHelper::setValue($servicesCounts, 'All', $allServicesCount);
+        $services = ArrayHelper::map($services, 'name', 'count');
+        ArrayHelper::setValue($services, 'All', $allServicesCount);
 
-        arsort($servicesCounts);
+        arsort($services);
 
-        return $servicesCounts;
+        return $services;
     }
 
-    public static function processStatuses($currentStatus)
-    {
-        $statusAliases = Order::getStatuses();
-
-        $statusesArray = [];
-        foreach ($statusAliases as $alias => $number){
-            $statusesArray[$number] = [
-                'name' => ucfirst($alias),
-                'isActive' => $alias === $currentStatus,
-                'link' => ['index', 'status' => $alias]
-            ];
-        }
-
-        return $statusesArray;
-    }
-
-    public static function processFilterElements($name, $elements, $query)
-    {
-        if(!ArrayHelper::keyExists($name, $query) || $query[$name] === null){ // checking if filter is in query string
-            $query[$name] = array_keys($elements)[0];
-        }
-
-        $modesArray = [];
-
-        $b = $name === 'search' ? ['status' => $query['status']] : ($name === 'status' ? [] : $query);
-        $link = ArrayHelper::merge(['index'], $b);
-
-        foreach ($elements as $alias => $number){
-            $link[$name] = $alias;
-            $modesArray[$number] = [
-                'name' => ucfirst($alias),
-                'isActive' => $alias === $query[$name],
-                'link' => $link
-            ];
-        }
-
-        return $modesArray;
-    }
-
-    public function processData($dataProvider)
-    {
-        foreach ($dataProvider->getModels() as $data){
-            $data['status'] = array_search($data['status'], Order::getStatuses());
-            $data['mode'] = array_search($data['mode'], Order::getModes());
-        }
-    }
 
     /**
      * Search function for orders
@@ -159,12 +116,12 @@ class OrderSearch extends Order
             ]
         );
 
-            $query->andFilterWhere(['=', 'status', $this->status]);
-            $query->andFilterWhere(['=', 'mode', $this->mode]);
-            $query->andFilterWhere(['=', 'o.id', $this->id]);
-            $query->andFilterWhere(['like', 'link', $this->link]);
-            $query->andFilterWhere(['=', 's.name', $this->service]);
-            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
+            $query->andFilterWhere(['=', 'status', Order::getStatuses()[$this->status]]);
+            $query->andFilterWhere(['=', 'mode', Order::getModes()[$this->mode]]);
+//            $query->andFilterWhere(['=', 'o.id', $this->id]);
+//            $query->andFilterWhere(['like', 'link', $this->link]);
+//            $query->andFilterWhere(['=', 's.name', $this->service]);
+//            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
 
         return $dataProvider;
     }

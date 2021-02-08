@@ -1,16 +1,16 @@
 <?php
 
-namespace app\modules\orders;
+namespace orders;
 
 use yii\base\Module;
 
 /**
  * Module Orders
- * @package app\modules\orders
+ * @package orders
  */
 class Orders extends Module
 {
-    public $controllerNamespace = 'app\modules\orders\controllers';
+    public $controllerNamespace = 'orders\controllers';
 
 
     public function init()

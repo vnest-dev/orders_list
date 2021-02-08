@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\orders\assets;
+namespace orders\assets;
 
 use yii\web\AssetBundle;
 
@@ -8,7 +8,7 @@ use yii\web\AssetBundle;
  * Class AppAsset
  * Modules asset class
  *
- * @package app\modules\orders\assets
+ * @package orders\assets
  */
 class AppAsset extends AssetBundle
 {

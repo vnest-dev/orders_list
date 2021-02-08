@@ -6,16 +6,18 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
+    'sourceLanguage' => 'en',
+    'language' => 'en',
     'bootstrap' => ['log'],
 
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
-        'orders' => '@app/modules/orders',
+        '@orders' => '@app/modules/orders',
     ],
     'modules' => [
         'orders' => [
-            'class' => 'app\modules\orders\Orders',
+            'class' => 'orders\Orders',
         ],
     ],
     'components' => [
@@ -51,14 +53,9 @@ $config = [
         ],
         'i18n' => [
             'translations' => [
-                'app*' => [
+                'messages*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
-                    //'basePath' => '@app/messages',
-                    //'sourceLanguage' => 'en-US',
-                    'fileMap' => [
-                        'messages'       => 'messages.php',
-                        'messages/error' => 'messages.php',
-                    ],
+                    'basePath' => '@orders/messages',
                 ],
             ],
         ],
@@ -68,7 +65,6 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                     '/' => 'orders/orders/index',
-
             ],
         ],
 
