@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
 class OrderSearch extends Order
 {
 
-    private $service;
+    public $service;
     public $username;
 
     /**
@@ -29,9 +29,10 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['link', 'service', 'status', 'mode', 'id'], 'safe'],
+            [['link', 'status', 'mode', 'id'], 'safe'],
             ['mode', 'default', 'value'=>'all'],
             ['status', 'default', 'value'=>'all orders'],
+            //['service', 'default'],
 
             [['username'], 'trim']
         ];
@@ -42,7 +43,10 @@ class OrderSearch extends Order
      */
     public function setFilters($params)
     {
-       foreach ($params as $key => $param){
+        unset($params['_csrf']);
+        unset($params['page']);
+        unset($params['per-page']);
+        foreach ($params as $key => $param){
            $this->{$key} = $param;
        }
     }
@@ -120,9 +124,8 @@ class OrderSearch extends Order
             $query->andFilterWhere(['=', 'mode', Order::getModes()[$this->mode]]);
 //            $query->andFilterWhere(['=', 'o.id', $this->id]);
 //            $query->andFilterWhere(['like', 'link', $this->link]);
-//            $query->andFilterWhere(['=', 's.name', $this->service]);
+            $query->andFilterWhere(['=', 's.name', $this->service]);
 //            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
-
         return $dataProvider;
     }
 }

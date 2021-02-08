@@ -66,7 +66,6 @@ class OrdersController extends Controller
     {
             $searchModel = new OrderSearch();
             $searchModel->setFilters(Yii::$app->request->post());
-            $dataProvider = $searchModel->search();
-            CsvHelper::sendCsvFromBuffer($dataProvider);
+            CsvHelper::sendCsvFromBuffer($searchModel->search());
     }
 }
