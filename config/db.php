@@ -2,13 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=orders_list_db_1;dbname=orders',
-    'username' => 'dev',
-    'password' => 'passw123!',
+    'dsn' => "mysql:host={$_ENV['DB_CONTAINER_NAME']};dbname={$_ENV['MYSQL_DATABASE']}",
+    'username' => "{$_ENV['MYSQL_USER']}",
+    'password' => "{$_ENV['MYSQL_PASSWORD']}",
     'charset' => 'utf8',
 
-    // Schema cache options (for production environment)
-    //'enableSchemaCache' => true,
-    //'schemaCacheDuration' => 60,
-    //'schemaCache' => 'cache',
 ];
