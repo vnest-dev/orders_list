@@ -13,8 +13,8 @@ use orders\widgets\PageWidget;
  */
 ?>
 
-<div class="container-fluid">
-    <ul class="nav nav-tabs p-b">
+<div class='container-fluid'>
+    <ul class='nav nav-tabs p-b'>
 
        <?= \orders\widgets\StatusWidget::widget(
                [
@@ -23,18 +23,18 @@ use orders\widgets\PageWidget;
                ]
        ) ?>
 
-        <li class="pull-right custom-search">
+        <li class='pull-right custom-search'>
             <?= \orders\widgets\SearchWidget::widget() ?>
         </li>
     </ul>
-    <table class="table order-table">
+    <table class='table order-table'>
         <thead>
         <tr>
             <th>ID</th>
             <th>User</th>
             <th>Link</th>
             <th>Quantity</th>
-            <th class="dropdown-th">
+            <th class='dropdown-th'>
                <?= \orders\widgets\ServiceWidget::widget(
                        [
                                'services'=>$services,
@@ -44,7 +44,7 @@ use orders\widgets\PageWidget;
                ) ?>
             </th>
             <th>Status</th>
-            <th class="dropdown-th">
+            <th class='dropdown-th'>
                 <?= \orders\widgets\ModeWidget::widget(
                         [
                                 'modes'=>$modes,
@@ -60,24 +60,23 @@ use orders\widgets\PageWidget;
         <?php foreach ($ordersDataProvider->getModels() as $order): ?>
             <tr>
                 <td><?= $order['id'] ?></td>
-                <td><?= $order["first_name"] . ' ' . $order["last_name"] ?></td>
-                <td class="link"><?= $order["link"] ?></td>
-                <td><?= $order["quantity"] ?></td>
-               <td class="service">
-                    <span class="label-id"><?= $services[$order["name"]] ?></span><?= $order["name"] ?>
-                </td>
+                <td><?= $order['username'] ?></td>
+                <td class='link'><?= $order['link'] ?></td>
+                <td><?= $order['quantity'] ?></td>
+               <td class='service'>
+                   <?= $order['service'] ?>
+               </td>
                 <td>
-                    <?= $order["status"] ?>
+                    <?= $order['status'] ?>
                 </td>
-                <td><?= $order["mode"] == 0 ? Yii::t('app', 'Manual') : Yii::t('app', 'Auto') ?></td>
-<!--                @TODO: make date processing in search model-->
-                <td><?= Yii::$app->formatter->asDatetime($order["created_at"], 'YYYY-mm-dd H:m:s') ?></td>
+                <td><?= $order['mode'] ?></td>
+                <td><?= $order['created_at'] ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="row">
-        <div class="col-sm-8">
+    <div class='row'>
+        <div class='col-sm-8'>
 
             <?= LinkPager::widget(
                 [

@@ -27,4 +27,8 @@ class User extends ActiveRecord
             [['first_name', 'last_name'], 'string', 'max' => 300]
         ];
     }
+    public function getUserName()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
 }

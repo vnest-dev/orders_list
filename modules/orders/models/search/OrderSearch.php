@@ -57,13 +57,17 @@ class OrderSearch extends Order
      */
     public function prepareData($dataProvider)
     {
+        $services =  $this->getServices();
        $models = $dataProvider->getModels();
        foreach ($models as $key => $data){
-           $models[$key]['username'] = $data['first_name'] . $data['last_name'];
-           $models[$key]['username'] = $data['first_name'] . $data['last_name'];
-           $models[$key]['username'] = $data['first_name'] . $data['last_name'];
+           $models[$key]['username'] = $data['first_name'] . ' ' . $data['last_name'];
+           $models[$key]['status'] = ucfirst(array_search($data['status'], Order::getStatuses()));
+           $models[$key]['mode'] = ucfirst(array_search($data['mode'], Order::getModes()));
+           $models[$key]['service'] = '<span class="label-id">' . $services[$data['name']] . '</span> ' . $data['name'];
+           $models[$key]['created_at'] = Yii::$app->formatter->asDatetime($data["created_at"], 'YYYY-mm-dd H:m:s');
        }
        $dataProvider->setModels($models);
+
        return $dataProvider;
     }
     
@@ -137,15 +141,13 @@ class OrderSearch extends Order
             ]
         );
 
-        print_r($this->prepareData($dataProvider)->getModels());
-        exit;
-        $this->prepareData($dataProvider);
+
             $query->andFilterWhere(['=', 'status', Order::getStatuses()[$this->status]]);
             $query->andFilterWhere(['=', 'mode', Order::getModes()[$this->mode]]);
 //            $query->andFilterWhere(['=', 'o.id', $this->id]);
 //            $query->andFilterWhere(['like', 'link', $this->link]);
             $query->andFilterWhere(['=', 's.name', $this->service]);
 //            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
-        return $dataProvider;
+        return $this->prepareData($dataProvider);
     }
 }
