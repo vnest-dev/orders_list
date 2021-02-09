@@ -12,6 +12,8 @@ use yii\db\Query;
 use yii\db\QueryBuilder;
 use yii\helpers\ArrayHelper;
 
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
+
 /**
  *
  * @property User $user
@@ -22,6 +24,9 @@ class OrderSearch extends Order
 
     public $service;
     public $username;
+    public $search;
+    public $searchType;
+    public $filters;
 
     /**
      * @return array[]
@@ -29,12 +34,19 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['link', 'status','service', 'mode', 'id'], 'safe'],
+            [['link', 'status','service', 'mode', 'id', 'search'], 'safe'],
             ['mode', 'default', 'value'=>'all'],
+            ['mode', 'in', 'range' => array_keys(Order::getModes())],
             ['status', 'default', 'value'=>'all orders'],
-            //['service', 'default'],
+            ['status', 'in', 'range' => array_keys(Order::getStatuses())],
+            ['service', 'in', 'range' => array_keys($this->getServices())],
 
-            [['username'], 'trim']
+            ['search', 'default', 'value'=>''],
+            [['search'], 'trim'],
+            [['search'], 'string'],
+
+            ['searchType', 'default', 'value'=>''],
+            [['searchType'], 'in', 'range' => ['username', 'link', 'id']]
         ];
     }
 
@@ -43,17 +55,25 @@ class OrderSearch extends Order
      */
     public function setFilters($params)
     {
-        //@TODO: make with yii
-        unset($params['_csrf']);
-        unset($params['page']);
-        unset($params['per-page']);
+       $this->filters = [
+           'status' => 'all orders',
+           'mode' => 'all',
+           'service' => null,
+           'search-type' => null,
+           'search' => null,
+       ];
+
         foreach ($params as $key => $param){
-           $this->{$key} = $param;
+           $this->filters[$key] = $param;
        }
     }
 
+
     /**
      * @param $dataProvider ActiveDataProvider
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function prepareData($dataProvider)
     {
@@ -77,11 +97,7 @@ class OrderSearch extends Order
      */
     public function getFilters()
     {
-       return [
-           'mode' => $this->mode,
-           'status' => $this->status,
-           'service' => $this->service
-       ];
+       return $this->filters;
     }
 
     /**
@@ -114,6 +130,25 @@ class OrderSearch extends Order
     }
 
 
+    public function applyFilters($query)
+    {
+        $query->andFilterWhere(['=', 'status', Order::getStatuses()[$this->filters['status']]]);
+        $query->andFilterWhere(['=', 'mode', Order::getModes()[$this->filters['mode']]]);
+        $query->andFilterWhere(['=', 's.name', $this->filters['service']]);
+
+        if($this->filters['search-type'] === 'id'){
+            $query->andFilterWhere(['=', 'o.id', $this->filters['search']]);
+        }
+        else if($this->filters['search-type'] === 'link'){
+            $query->andFilterWhere(['like', 'link', $this->filters['search']]);
+        }
+        else if($this->filters['search-type'] === 'username'){
+            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->filters['search']]);
+        }
+
+        return $query;
+    }
+
     /**
      * Search function for orders
      *
@@ -134,20 +169,13 @@ class OrderSearch extends Order
 
         $dataProvider = new ActiveDataProvider(
             [
-                'query' => $query,
+                'query' => $this->applyFilters($query),
                 'pagination' => [
                     'pagesize' => Yii::$app->params['records_on_page']
                 ]
             ]
         );
 
-
-            $query->andFilterWhere(['=', 'status', Order::getStatuses()[$this->status]]);
-            $query->andFilterWhere(['=', 'mode', Order::getModes()[$this->mode]]);
-//            $query->andFilterWhere(['=', 'o.id', $this->id]);
-//            $query->andFilterWhere(['like', 'link', $this->link]);
-            $query->andFilterWhere(['=', 's.name', $this->service]);
-//            $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->username]);
         return $this->prepareData($dataProvider);
     }
 }

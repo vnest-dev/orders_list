@@ -4,11 +4,12 @@
  */
 
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 ?>
 
 <?php foreach ($statuses as $key => $status): ?>
     <li class="<?= $status['isActive'] ? 'active' : '' ?>">
-        <a href="<?= Url::toRoute($status['link']) ?>"><?= Yii::t('app', $status['name']) ?></a>
+        <?= Html::a(Yii::t('app', $status['name']), [Url::toRoute($status['link'])])?>
     </li>
 <?php endforeach; ?>

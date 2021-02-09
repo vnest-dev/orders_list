@@ -22,9 +22,7 @@ class StatusWidget extends Widget
 
     public function run()
     {
-        parent::run();
         $statusesArray = [];
-
 
         foreach ($this->statuses as $alias => $number) {
             $statusesArray[$number] = [

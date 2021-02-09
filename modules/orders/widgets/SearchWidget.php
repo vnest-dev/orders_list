@@ -3,11 +3,12 @@
 namespace orders\widgets;
 
 use yii\base\Widget;
+use yii\helpers\ArrayHelper;
 
 class SearchWidget extends Widget
 {
 
-    public $filter;
+    public $filters;
 
     public function init()
     {
@@ -16,9 +17,12 @@ class SearchWidget extends Widget
 
     public function run()
     {
-        parent::run();
-
-        return $this->render('searchWidget');
+        return $this->render(
+            'searchWidget',
+            [
+                'filters' => $this->filters
+            ]
+        );
     }
 
 }

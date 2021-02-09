@@ -16,8 +16,8 @@ class LinkHelper
     {
         return [
             'status'  => [],
-            'mode'    => ['status', 'service'],
-            'service' => ['status', 'mode'],
+            'mode'    => ['status', 'service', 'search', 'search-type'],
+            'service' => ['status', 'mode', 'search', 'search-type'],
         ];
     }
 

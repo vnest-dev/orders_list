@@ -1,14 +1,18 @@
 <?php
 
-use yii\helpers\Url;
 use yii\widgets\LinkPager;
-use yii\helpers\ArrayHelper;
 use orders\widgets\PageWidget;
+use orders\widgets\ServiceWidget;
+use orders\widgets\ModeWidget;
+use orders\widgets\SearchWidget;
+use orders\widgets\StatusWidget;
+use orders\widgets\SaveButtonWidget;
 
 /**
  * @var array $statuses
  * @var array $services
  * @var array $modes
+ * @var array $filters
  * @var yii\data\ActiveDataProvider $ordersDataProvider
  */
 ?>
@@ -16,15 +20,19 @@ use orders\widgets\PageWidget;
 <div class='container-fluid'>
     <ul class='nav nav-tabs p-b'>
 
-       <?= \orders\widgets\StatusWidget::widget(
-               [
-                   'statuses' => $statuses,
-                   'filters'  => $filters
-               ]
-       ) ?>
+        <?= StatusWidget::widget(
+            [
+                'statuses' => $statuses,
+                'filters' => $filters
+            ]
+        ) ?>
 
         <li class='pull-right custom-search'>
-            <?= \orders\widgets\SearchWidget::widget() ?>
+            <?= SearchWidget::widget(
+                    [
+                            'filters' => $filters
+                    ]
+            ) ?>
         </li>
     </ul>
     <table class='table order-table'>
@@ -35,22 +43,22 @@ use orders\widgets\PageWidget;
             <th>Link</th>
             <th>Quantity</th>
             <th class='dropdown-th'>
-               <?= \orders\widgets\ServiceWidget::widget(
-                       [
-                               'services'=>$services,
-                               'filters'  => $filters
+                <?= ServiceWidget::widget(
+                    [
+                        'services' => $services,
+                        'filters' => $filters
 
-                       ]
-               ) ?>
+                    ]
+                ) ?>
             </th>
             <th>Status</th>
             <th class='dropdown-th'>
-                <?= \orders\widgets\ModeWidget::widget(
-                        [
-                                'modes'=>$modes,
-                                'filters'  => $filters
+                <?= ModeWidget::widget(
+                    [
+                        'modes' => $modes,
+                        'filters' => $filters
 
-                        ]
+                    ]
                 ) ?>
             </th>
             <th>Created</th>
@@ -63,9 +71,9 @@ use orders\widgets\PageWidget;
                 <td><?= $order['username'] ?></td>
                 <td class='link'><?= $order['link'] ?></td>
                 <td><?= $order['quantity'] ?></td>
-               <td class='service'>
-                   <?= $order['service'] ?>
-               </td>
+                <td class='service'>
+                    <?= $order['service'] ?>
+                </td>
                 <td>
                     <?= $order['status'] ?>
                 </td>
@@ -87,12 +95,12 @@ use orders\widgets\PageWidget;
         </div>
 
         <?= PageWidget::widget(
-                [
-                    'dataProvider' => $ordersDataProvider
-                ]
+            [
+                'dataProvider' => $ordersDataProvider
+            ]
         ) ?>
 
-<?= \orders\widgets\SaveButtonWidget::widget(['dataCountOnPage' => $ordersDataProvider->getCount()]) ?>
+        <?= SaveButtonWidget::widget(['dataCountOnPage' => $ordersDataProvider->getCount()]) ?>
 
     </div>
 </div>

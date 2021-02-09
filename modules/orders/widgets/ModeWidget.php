@@ -19,7 +19,6 @@ class ModeWidget extends Widget
 
     public function run()
     {
-        parent::run();
         $modesArray = [];
 
         foreach ($this->modes as $alias => $number) {
