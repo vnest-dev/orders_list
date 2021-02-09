@@ -1,7 +1,8 @@
 <?php
 
-namespace orders\components;
+namespace orders\widgets;
 
+use orders\helpers\LinkHelper;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 
@@ -25,10 +26,9 @@ class ModeWidget extends Widget
             $modesArray[$number] = [
                 'name' => ucfirst($alias),
                 'isActive' => false,
-                'link' => ['index', 'mode' => $alias]
+                'link' => LinkHelper::generateLink('index', ['name'=>'mode', 'value' => $alias], $this->filters)
             ];
         }
-
 
         if (ArrayHelper::keyExists('mode', $this->filters)) {
             $elementIndex = $this->filters['mode'] !== 'all' && $this->filters['mode'] !== null ? array_search(

@@ -29,7 +29,7 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['link', 'status', 'mode', 'id'], 'safe'],
+            [['link', 'status','service', 'mode', 'id'], 'safe'],
             ['mode', 'default', 'value'=>'all'],
             ['status', 'default', 'value'=>'all orders'],
             //['service', 'default'],
@@ -43,6 +43,7 @@ class OrderSearch extends Order
      */
     public function setFilters($params)
     {
+        //@TODO: make with yii
         unset($params['_csrf']);
         unset($params['page']);
         unset($params['per-page']);
@@ -52,6 +53,21 @@ class OrderSearch extends Order
     }
 
     /**
+     * @param $dataProvider ActiveDataProvider
+     */
+    public function prepareData($dataProvider)
+    {
+       $models = $dataProvider->getModels();
+       foreach ($models as $key => $data){
+           $models[$key]['username'] = $data['first_name'] . $data['last_name'];
+           $models[$key]['username'] = $data['first_name'] . $data['last_name'];
+           $models[$key]['username'] = $data['first_name'] . $data['last_name'];
+       }
+       $dataProvider->setModels($models);
+       return $dataProvider;
+    }
+    
+    /**
      * @param $params
      * @return array
      */
@@ -59,7 +75,8 @@ class OrderSearch extends Order
     {
        return [
            'mode' => $this->mode,
-           'status' => $this->status
+           'status' => $this->status,
+           'service' => $this->service
        ];
     }
 
@@ -120,6 +137,9 @@ class OrderSearch extends Order
             ]
         );
 
+        print_r($this->prepareData($dataProvider)->getModels());
+        exit;
+        $this->prepareData($dataProvider);
             $query->andFilterWhere(['=', 'status', Order::getStatuses()[$this->status]]);
             $query->andFilterWhere(['=', 'mode', Order::getModes()[$this->mode]]);
 //            $query->andFilterWhere(['=', 'o.id', $this->id]);

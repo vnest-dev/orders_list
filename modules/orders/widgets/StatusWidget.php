@@ -1,7 +1,8 @@
 <?php
 
-namespace orders\components;
+namespace orders\widgets;
 
+use orders\helpers\LinkHelper;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 
@@ -29,7 +30,7 @@ class StatusWidget extends Widget
             $statusesArray[$number] = [
                 'name' => ucfirst($alias),
                 'isActive' => false,
-                'link' => ['index', 'status' => $alias]
+                'link' => LinkHelper::generateLink('index', ['name'=>'status', 'value' => $alias], $this->filters)
             ];
         }
 

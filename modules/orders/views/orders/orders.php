@@ -3,7 +3,7 @@
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use yii\helpers\ArrayHelper;
-use orders\components\PageWidget;
+use orders\widgets\PageWidget;
 
 /**
  * @var array $statuses
@@ -16,7 +16,7 @@ use orders\components\PageWidget;
 <div class="container-fluid">
     <ul class="nav nav-tabs p-b">
 
-       <?= \orders\components\StatusWidget::widget(
+       <?= \orders\widgets\StatusWidget::widget(
                [
                    'statuses' => $statuses,
                    'filters'  => $filters
@@ -24,7 +24,7 @@ use orders\components\PageWidget;
        ) ?>
 
         <li class="pull-right custom-search">
-            <?= \orders\components\SearchWidget::widget() ?>
+            <?= \orders\widgets\SearchWidget::widget() ?>
         </li>
     </ul>
     <table class="table order-table">
@@ -35,17 +35,17 @@ use orders\components\PageWidget;
             <th>Link</th>
             <th>Quantity</th>
             <th class="dropdown-th">
-               <?= \orders\components\ServiceWidget::widget(
+               <?= \orders\widgets\ServiceWidget::widget(
                        [
                                'services'=>$services,
-                               //'filters'  => $filters
+                               'filters'  => $filters
 
                        ]
                ) ?>
             </th>
             <th>Status</th>
             <th class="dropdown-th">
-                <?= \orders\components\ModeWidget::widget(
+                <?= \orders\widgets\ModeWidget::widget(
                         [
                                 'modes'=>$modes,
                                 'filters'  => $filters
@@ -93,7 +93,7 @@ use orders\components\PageWidget;
                 ]
         ) ?>
 
-<?= \orders\components\SaveButtonWidget::widget(['dataCountOnPage' => $ordersDataProvider->getCount()]) ?>
+<?= \orders\widgets\SaveButtonWidget::widget(['dataCountOnPage' => $ordersDataProvider->getCount()]) ?>
 
     </div>
 </div>

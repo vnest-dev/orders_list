@@ -13,14 +13,14 @@ use yii\helpers\Url;
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <?php foreach ($services as $service => $count): ?>
+        <?php foreach ($services as $service): ?>
             <li>
-                <a href="<?= Url::toRoute(['index']) ?>">
+                <a href="<?= Url::toRoute($service['link']) ?>">
 
-                    <?php  if ($service === 'All'): ?>
-                        <?= $service . ' (' . $count . ')' ?>
+                    <?php  if ($service['name'] === 'All'): ?>
+                        <?= $service['name'] . ' (' . $service['count'] . ')' ?>
                     <?php else: ?>
-                        <span class="label-id"><?= $count ?></span> <?= $service ?>
+                        <span class="label-id"><?= $service['count'] ?></span> <?= $service['name'] ?>
                     <?php endif; ?>
                 </a>
             </li>

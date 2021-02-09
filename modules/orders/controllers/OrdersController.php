@@ -7,6 +7,7 @@ use orders\helpers\FiltersHelper;
 use orders\models\Order;
 use Yii;
 use orders\models\search\OrderSearch;
+use yii\helpers\Url;
 use yii\web\Controller;
 
 /**
@@ -39,11 +40,11 @@ class OrdersController extends Controller
      */
     public function actionIndex()
     {
-
         $this->layout = 'main';
         $searchModel = new OrderSearch();
         $searchModel->setFilters(Yii::$app->request->get());
 
+        Url::remember(); //запоминаем урл, чтобы использовать его параметры в методе download
 
 
         return $this->render(
@@ -64,8 +65,12 @@ class OrdersController extends Controller
      */
     public function actionDownload()
     {
+            //берем параметры из предыдущего урла
+            $params = [];
+            parse_str( parse_url( Url::previous(), PHP_URL_QUERY), $params );
+
             $searchModel = new OrderSearch();
-            $searchModel->setFilters(Yii::$app->request->post());
+            $searchModel->setFilters($params);
             CsvHelper::sendCsvFromBuffer($searchModel->search());
     }
 }
