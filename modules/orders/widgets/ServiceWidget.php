@@ -4,8 +4,6 @@ namespace orders\widgets;
 
 use orders\helpers\LinkHelper;
 use yii\base\Widget;
-use yii\db\Query;
-use yii\helpers\ArrayHelper;
 
 
 class ServiceWidget extends Widget
@@ -26,9 +24,9 @@ class ServiceWidget extends Widget
 
         foreach ($this->services as $alias => $number) {
             $servicesArray[$number] = [
-                'name' =>  $alias === 'All' ?  $alias . ' (' . $number . ')' : "<span class='label-id'>" . $number . "</span> " . $alias,
+                'name' => $alias === 'All' ? $alias . ' (' . $number . ')' : "<span class='label-id'>" . $number . "</span> " . $alias,
                 'isActive' => false,
-                'link' => LinkHelper::generateLink('index', ['name'=>'service', 'value' => $alias], $this->filters)
+                'link' => LinkHelper::generateLink('index', ['name' => 'service', 'value' => $alias], $this->filters)
             ];
         }
 

@@ -3,10 +3,11 @@
 namespace orders\controllers;
 
 use orders\helpers\CsvHelper;
-use orders\helpers\FiltersHelper;
 use orders\models\Order;
-use Yii;
 use orders\models\search\OrderSearch;
+use Yii;
+use yii\db\Exception;
+use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 
@@ -22,21 +23,21 @@ class OrdersController extends Controller
     public function behaviors()
     {
         return [
-        'verbs' => [
-            'class' => \yii\filters\VerbFilter::className(),
-            'actions' => [
-                'index'  => ['GET'],
-                'download' => ['POST']
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['GET'],
+                    'download' => ['POST']
+                ],
             ],
-        ],
-    ];
+        ];
     }
 
     /**
      * Renders orders table
      *
      * @return string
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     public function actionIndex()
     {
@@ -44,7 +45,6 @@ class OrdersController extends Controller
         $searchModel->setFilters(Yii::$app->request->get());
 
         Url::remember(); //запоминаем урл, чтобы использовать его параметры в методе download
-
 
         return $this->render(
             'orders',
@@ -56,7 +56,6 @@ class OrdersController extends Controller
                 'services' => $searchModel->getServices(),
             ]
         );
-
     }
 
     /**
@@ -64,12 +63,12 @@ class OrdersController extends Controller
      */
     public function actionDownload()
     {
-            //берем параметры из предыдущего урла
-            $params = [];
-            parse_str( parse_url( Url::previous(), PHP_URL_QUERY), $params );
+        //берем параметры из предыдущего урла
+        $params = [];
+        parse_str(parse_url(Url::previous(), PHP_URL_QUERY), $params);
 
-            $searchModel = new OrderSearch();
-            $searchModel->setFilters($params);
-            CsvHelper::sendCsvFromBuffer($searchModel->search());
+        $searchModel = new OrderSearch();
+        $searchModel->setFilters($params);
+        CsvHelper::sendCsvFromBuffer($searchModel->search());
     }
 }

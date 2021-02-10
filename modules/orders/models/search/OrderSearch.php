@@ -3,21 +3,14 @@
 namespace orders\models\search;
 
 use orders\models\Order;
-use orders\models\Service;
-use orders\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\data\SqlDataProvider;
 use yii\db\Query;
-use yii\db\QueryBuilder;
 use yii\helpers\ArrayHelper;
 
-use function Webmozart\Assert\Tests\StaticAnalysis\null;
-
 /**
- *
- * @property User $user
- * @property Service $service
+ * Class OrderSearch - search class for orders table
+ * @package orders\models\search
  */
 class OrderSearch extends Order
 {

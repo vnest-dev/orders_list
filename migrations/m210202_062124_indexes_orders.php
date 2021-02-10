@@ -39,7 +39,6 @@ class m210202_062124_indexes_orders extends Migration
         ";
 
         $this->execute($sql);
-
     }
 
     /**

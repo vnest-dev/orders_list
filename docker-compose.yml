@@ -7,6 +7,8 @@ services:
       - ${ROOT_DIR}:/app
       - ${SERVER_CONF_DIR}:/etc/apache2/sites-available
       - ${LOGS_DIR}:/var/log/apache2
+    env_file:
+      - .env
     ports:
       - "${HTTP_PORT}:80"
       - "${HTTPS_PORT}:443"

@@ -3,11 +3,8 @@
 namespace orders\widgets;
 
 use orders\helpers\LinkHelper;
-use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
-
-use function Webmozart\Assert\Tests\StaticAnalysis\email;
 
 
 class StatusWidget extends Widget
@@ -29,9 +26,10 @@ class StatusWidget extends Widget
             $statusesArray[$number] = [
                 'name' => $alias,
                 'isActive' => false,
-                'link' => LinkHelper::generateLink('index', ['name'=>'status', 'value' => $alias], $this->filters)
+                'link' => LinkHelper::generateLink('index', ['name' => 'status', 'value' => $alias], $this->filters)
             ];
         }
+
         if (ArrayHelper::keyExists('status', $this->filters)) {
             $elementIndex = $this->filters['status'] !== 'all_orders' && $this->filters['status'] !== null ? array_search(
                     $this->filters['status'],
@@ -41,11 +39,7 @@ class StatusWidget extends Widget
             $elementIndex = null;
         }
 
-
-
         $statusesArray[$elementIndex]['isActive'] = true;
-
-
 
         return $this->render(
             'statusWidget',

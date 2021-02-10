@@ -25,7 +25,7 @@ class ModeWidget extends Widget
             $modesArray[$number] = [
                 'name' => $alias,
                 'isActive' => false,
-                'link' => LinkHelper::generateLink('index', ['name'=>'mode', 'value' => $alias], $this->filters)
+                'link' => LinkHelper::generateLink('index', ['name' => 'mode', 'value' => $alias], $this->filters)
             ];
         }
 

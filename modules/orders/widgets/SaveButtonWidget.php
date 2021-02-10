@@ -16,11 +16,9 @@ class SaveButtonWidget extends Widget
 
     public function run()
     {
-        if($this->dataCountOnPage){
+        if ($this->dataCountOnPage) {
             return $this->render('saveButtonWidget');
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
