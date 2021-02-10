@@ -11,7 +11,7 @@ use yii\base\Module;
 class Orders extends Module
 {
     public $controllerNamespace = 'orders\controllers';
-
+    public $layout = 'main';
 
     public function init()
     {

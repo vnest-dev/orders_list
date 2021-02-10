@@ -87,9 +87,9 @@ class Order extends ActiveRecord
     public static function getStatuses()
     {
         return [
-            'all orders' => null,
+            'all_orders' => null,
             'pending' => Order::STATUS_PENDING,
-            'in progress' => Order::STATUS_INPROGRESS,
+            'in_progress' => Order::STATUS_INPROGRESS,
             'completed' => Order::STATUS_COMPLETED,
             'canceled' => Order::STATUS_CANCELED,
             'error' => Order::STATUS_FAILED

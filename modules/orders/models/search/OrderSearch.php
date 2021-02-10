@@ -37,7 +37,7 @@ class OrderSearch extends Order
             [['link', 'status','service', 'mode', 'id', 'search'], 'safe'],
             ['mode', 'default', 'value'=>'all'],
             ['mode', 'in', 'range' => array_keys(Order::getModes())],
-            ['status', 'default', 'value'=>'all orders'],
+            ['status', 'default', 'value'=>'all_orders'],
             ['status', 'in', 'range' => array_keys(Order::getStatuses())],
             ['service', 'in', 'range' => array_keys($this->getServices())],
 
@@ -56,7 +56,7 @@ class OrderSearch extends Order
     public function setFilters($params)
     {
        $this->filters = [
-           'status' => 'all orders',
+           'status' => 'all_orders',
            'mode' => 'all',
            'service' => null,
            'search-type' => null,
@@ -81,8 +81,8 @@ class OrderSearch extends Order
        $models = $dataProvider->getModels();
        foreach ($models as $key => $data){
            $models[$key]['username'] = $data['first_name'] . ' ' . $data['last_name'];
-           $models[$key]['status'] = ucfirst(array_search($data['status'], Order::getStatuses()));
-           $models[$key]['mode'] = ucfirst(array_search($data['mode'], Order::getModes()));
+           $models[$key]['status'] = array_search($data['status'], Order::getStatuses());
+           $models[$key]['mode'] = array_search($data['mode'], Order::getModes());
            $models[$key]['service'] = '<span class="label-id">' . $services[$data['name']] . '</span> ' . $data['name'];
            $models[$key]['created_at'] = Yii::$app->formatter->asDatetime($data["created_at"], 'YYYY-mm-dd H:m:s');
        }
@@ -129,7 +129,12 @@ class OrderSearch extends Order
         return $services;
     }
 
-
+    /**
+     * Apply filters to query
+     *
+     * @param $query
+     * @return mixed
+     */
     public function applyFilters($query)
     {
         $query->andFilterWhere(['=', 'status', Order::getStatuses()[$this->filters['status']]]);

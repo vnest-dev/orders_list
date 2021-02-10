@@ -23,7 +23,7 @@ class ModeWidget extends Widget
 
         foreach ($this->modes as $alias => $number) {
             $modesArray[$number] = [
-                'name' => ucfirst($alias),
+                'name' => $alias,
                 'isActive' => false,
                 'link' => LinkHelper::generateLink('index', ['name'=>'mode', 'value' => $alias], $this->filters)
             ];
@@ -31,7 +31,7 @@ class ModeWidget extends Widget
 
         if (ArrayHelper::keyExists('mode', $this->filters)) {
             $elementIndex = $this->filters['mode'] !== 'all' && $this->filters['mode'] !== null ? array_search(
-                    ucfirst($this->filters['mode']),
+                    $this->filters['mode'],
                     array_column($modesArray, 'name')
                 ) - 1 : null;
         } else {

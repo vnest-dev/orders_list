@@ -47,7 +47,24 @@ class m210202_062124_indexes_orders extends Migration
      */
     public function safeDown()
     {
+        $sql = "
+        alter table orders
+	        drop foreign key orders_users_id_fk,
+	        drop foreign key orders_services_id_fk;
 
+        drop index orders_mode_service_id_index on orders;
+        
+        drop index orders_mode_user_id_index on orders;
+        
+        drop index orders_status_mode_index on orders;
+        
+        drop index orders_status_service_id_index on orders;
+        
+        drop index orders_status_user_id_index on orders;
+
+        ";
+
+        $this->execute($sql);
         return false;
     }
 

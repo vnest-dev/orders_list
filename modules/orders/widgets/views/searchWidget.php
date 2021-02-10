@@ -13,7 +13,7 @@ use yii\helpers\Html;
 <?= Html::beginForm([Url::to('orders/index')], 'get', ['class' => 'form-inline']) ?>
 
 <div class="input-group">
-    <?= Html::input('text', 'search', $filters['search'], ['class' => 'form-control', 'placeholder' => 'Search']) ?>
+    <?= Html::input('text', 'search', $filters['search'], ['class' => 'form-control', 'placeholder' =>  Yii::t('messages', "orders.search.search")]) ?>
     <?= Html::hiddenInput('status', $filters['status']) ?>
 
 
@@ -23,9 +23,9 @@ use yii\helpers\Html;
             'search-type',
             $filters['search-type'],
             [
-                'id' => 'Order ID',
-                'link' => 'Link',
-                'username' => 'Username'
+                'id' => Yii::t('messages','orders.search.order_id'),
+                'link' => Yii::t('messages','orders.search.link'),
+                'username' => Yii::t('messages','orders.search.username')
             ],
             ['class' => 'form-control search-select']
         ) ?>

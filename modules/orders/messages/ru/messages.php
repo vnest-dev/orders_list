@@ -1,5 +1,26 @@
 <?php
 
 return [
-    'Pending' => 'В обработке'
+    'orders.status.pending' => 'В ожидании',
+    'orders.status.all_orders' => 'Все заказы',
+    'orders.status.in_progress' => 'В процессе',
+    'orders.status.completed' => 'Завершен',
+    'orders.status.canceled' => 'Отменен',
+    'orders.status.error' => 'Ошибка',
+    'orders.mode.all' => 'Все',
+    'orders.mode.manual' => 'Вручную',
+    'orders.mode.auto' => 'Авто',
+    'orders.id' => 'ID',
+    'orders.user' => 'Пользователь',
+    'orders.link' => 'Ссылка',
+    'orders.quantity' => 'Количество',
+    'orders.service' => 'Сервис',
+    'orders.mode' => 'Режим',
+    'orders.status' => 'Статус',
+    'orders.created' => 'Дата',
+    'orders.search.search' => 'Поиск',
+    'orders.search.link' => 'Ссылка',
+    'orders.search.username' => 'Имя Фамилия',
+    'orders.search.order_id' => 'ID заказа',
+    'orders.save.save' => 'Сохранить результат',
 ];

@@ -10,7 +10,7 @@ use yii\helpers\Html;
 ?>
 <div class="dropdown">
     <?= Html::button(
-        Yii::t('messages', 'Service') . " <span class='caret'></span>",
+        Yii::t('messages', 'orders.service') . " <span class='caret'></span>",
         [
             'class' => 'btn btn-th btn-default dropdown-toggle',
             'type' => 'button',

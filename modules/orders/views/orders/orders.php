@@ -38,10 +38,10 @@ use orders\widgets\SaveButtonWidget;
     <table class='table order-table'>
         <thead>
         <tr>
-            <th>ID</th>
-            <th>User</th>
-            <th>Link</th>
-            <th>Quantity</th>
+            <th><?= Yii::t('messages', "orders.id") ?></th>
+            <th><?= Yii::t('messages', "orders.user") ?></th>
+            <th><?= Yii::t('messages', "orders.link") ?></th>
+            <th><?= Yii::t('messages', "orders.quantity") ?></th>
             <th class='dropdown-th'>
                 <?= ServiceWidget::widget(
                     [
@@ -51,7 +51,7 @@ use orders\widgets\SaveButtonWidget;
                     ]
                 ) ?>
             </th>
-            <th>Status</th>
+            <th><?= Yii::t('messages', "orders.status") ?></th>
             <th class='dropdown-th'>
                 <?= ModeWidget::widget(
                     [
@@ -61,7 +61,7 @@ use orders\widgets\SaveButtonWidget;
                     ]
                 ) ?>
             </th>
-            <th>Created</th>
+            <th><?= Yii::t('messages', "orders.created") ?></th>
         </tr>
         </thead>
         <tbody>
@@ -75,9 +75,9 @@ use orders\widgets\SaveButtonWidget;
                     <?= $order['service'] ?>
                 </td>
                 <td>
-                    <?= $order['status'] ?>
+                    <?= Yii::t('messages', "orders.status." . $order['status']) ?>
                 </td>
-                <td><?= $order['mode'] ?></td>
+                <td><?= Yii::t('messages', "orders.mode." . $order['mode']) ?></td>
                 <td><?= $order['created_at'] ?></td>
             </tr>
         <?php endforeach; ?>

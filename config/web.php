@@ -7,7 +7,9 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'sourceLanguage' => 'en',
-    'language' => 'en',
+    'language' => 'en-EN',
+    //'language' => 'ru-RU', //
+
     'bootstrap' => ['log'],
 
     'aliases' => [

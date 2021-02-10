@@ -40,7 +40,6 @@ class OrdersController extends Controller
      */
     public function actionIndex()
     {
-        $this->layout = 'main';
         $searchModel = new OrderSearch();
         $searchModel->setFilters(Yii::$app->request->get());
 
