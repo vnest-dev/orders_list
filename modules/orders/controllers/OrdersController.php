@@ -10,6 +10,7 @@ use yii\db\Exception;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\base\InvalidConfigException;
 
 /**
  * Class OrdersController
@@ -38,6 +39,7 @@ class OrdersController extends Controller
      *
      * @return string
      * @throws Exception
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {

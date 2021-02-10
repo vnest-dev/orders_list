@@ -24,7 +24,7 @@ class ServiceWidget extends Widget
 
         foreach ($this->services as $alias => $number) {
             $servicesArray[$number] = [
-                'name' => $alias === 'All' ? $alias . ' (' . $number . ')' : "<span class='label-id'>" . $number . "</span> " . $alias,
+                'name' => $alias === 'All' ? $alias . ' (' . $number . ')' : "<span class='label-id'>" . $number . '</span> ' . $alias,
                 'isActive' => false,
                 'link' => LinkHelper::generateLink('index', ['name' => 'service', 'value' => $alias], $this->filters)
             ];

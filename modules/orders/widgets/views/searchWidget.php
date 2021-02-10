@@ -13,7 +13,7 @@ use yii\helpers\Html;
 <?= Html::beginForm([Url::to('orders/index')], 'get', ['class' => 'form-inline']) ?>
 
 <div class="input-group">
-    <?= Html::input('text', 'search', $filters['search'], ['class' => 'form-control', 'placeholder' =>  Yii::t('messages', "orders.search.search")]) ?>
+    <?= Html::input('text', 'search', $filters['search'], ['class' => 'form-control', 'placeholder' =>  Yii::t('messages', 'orders.search.search')]) ?>
     <?= Html::hiddenInput('status', $filters['status']) ?>
 
 

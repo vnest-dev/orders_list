@@ -27,6 +27,7 @@ class LinkHelper
      * @param $action string
      * @param $filter array
      * @param $filters array
+     * @return array
      */
     public static function generateLink($action, $filter, $filters)
     {

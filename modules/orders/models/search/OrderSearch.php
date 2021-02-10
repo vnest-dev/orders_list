@@ -4,7 +4,9 @@ namespace orders\models\search;
 
 use orders\models\Order;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -23,6 +25,7 @@ class OrderSearch extends Order
 
     /**
      * @return array[]
+     * @throws Exception
      */
     public function rules()
     {
@@ -65,8 +68,8 @@ class OrderSearch extends Order
     /**
      * @param $dataProvider ActiveDataProvider
      * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\Exception
+     * @throws InvalidConfigException
+     * @throws Exception
      */
     public function prepareData($dataProvider)
     {
@@ -77,15 +80,14 @@ class OrderSearch extends Order
            $models[$key]['status'] = array_search($data['status'], Order::getStatuses());
            $models[$key]['mode'] = array_search($data['mode'], Order::getModes());
            $models[$key]['service'] = '<span class="label-id">' . $services[$data['name']] . '</span> ' . $data['name'];
-           $models[$key]['created_at'] = Yii::$app->formatter->asDatetime($data["created_at"], 'YYYY-mm-dd H:m:s');
+           $models[$key]['created_at'] = Yii::$app->formatter->asDatetime($data['created_at'], 'YYYY-mm-dd H:m:s');
        }
        $dataProvider->setModels($models);
 
        return $dataProvider;
     }
-    
+
     /**
-     * @param $params
      * @return array
      */
     public function getFilters()
@@ -96,7 +98,7 @@ class OrderSearch extends Order
     /**
      * Get array of all services counts
      * @return array
-     * @throws \yii\db\Exception
+     * @throws Exception
      */
     public function getServices()
     {
@@ -137,10 +139,10 @@ class OrderSearch extends Order
         if($this->filters['search-type'] === 'id'){
             $query->andFilterWhere(['=', 'o.id', $this->filters['search']]);
         }
-        else if($this->filters['search-type'] === 'link'){
+        elseif($this->filters['search-type'] === 'link'){
             $query->andFilterWhere(['like', 'link', $this->filters['search']]);
         }
-        else if($this->filters['search-type'] === 'username'){
+        elseif($this->filters['search-type'] === 'username'){
             $query->andFilterWhere(['like', "concat_ws(' ', first_name, last_name)", $this->filters['search']]);
         }
 
@@ -151,6 +153,8 @@ class OrderSearch extends Order
      * Search function for orders
      *
      * @return ActiveDataProvider
+     * @throws Exception
+     * @throws InvalidConfigException
      */
     public function search()
     {

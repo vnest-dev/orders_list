@@ -2,6 +2,7 @@
 
 namespace orders\models;
 
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -51,7 +52,7 @@ class Order extends ActiveRecord
     /**
      * Relation with users
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUsers()
     {
@@ -61,7 +62,7 @@ class Order extends ActiveRecord
     /**
      * Relation with services
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getServices()
     {
