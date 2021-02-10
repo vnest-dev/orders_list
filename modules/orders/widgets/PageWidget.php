@@ -4,11 +4,12 @@ namespace orders\widgets;
 
 use Yii;
 use yii\base\Widget;
+use yii\data\ActiveDataProvider;
 
 class PageWidget extends Widget
 {
 
-    public $dataProvider;
+    public ActiveDataProvider $dataProvider;
 
     public function init()
     {

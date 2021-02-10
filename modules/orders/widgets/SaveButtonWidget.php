@@ -7,7 +7,7 @@ use yii\base\Widget;
 
 class SaveButtonWidget extends Widget
 {
-    public $dataCountOnPage;
+    public int $dataCountOnPage;
 
     public function init()
     {

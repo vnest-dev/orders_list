@@ -8,8 +8,8 @@ use yii\base\Widget;
 
 class ServiceWidget extends Widget
 {
-    public $services;
-    public $filters;
+    public array $services;
+    public array $filters;
 
 
     public function init()

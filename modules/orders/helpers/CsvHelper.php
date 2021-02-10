@@ -16,7 +16,7 @@ class CsvHelper
      * @param $dataProvider ActiveDataProvider
      */
     public static
-    function sendCsvFromBuffer($dataProvider)
+    function sendCsvFromBuffer(ActiveDataProvider $dataProvider)
     {
         ob_start();
         $fileName = date('YmdHis', time());

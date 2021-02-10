@@ -9,8 +9,8 @@ use yii\helpers\ArrayHelper;
 
 class StatusWidget extends Widget
 {
-    public $statuses;
-    public $filters;
+    public array $statuses;
+    public array $filters;
 
 
     public function init()

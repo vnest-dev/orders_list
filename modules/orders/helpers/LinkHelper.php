@@ -29,7 +29,7 @@ class LinkHelper
      * @param $filters array
      * @return array
      */
-    public static function generateLink($action, $filter, $filters)
+    public static function generateLink(string $action, array $filter, array $filters)
     {
         $link = [$action, $filter['name']=>$filter['value']];
         foreach (LinkHelper::getFilterRules()[$filter['name']] as $type) {

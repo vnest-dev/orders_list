@@ -7,7 +7,7 @@ use yii\base\Widget;
 class SearchWidget extends Widget
 {
 
-    public $filters;
+    public array $filters;
 
     public function init()
     {

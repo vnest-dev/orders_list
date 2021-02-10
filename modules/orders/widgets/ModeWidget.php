@@ -9,8 +9,8 @@ use yii\helpers\ArrayHelper;
 
 class ModeWidget extends Widget
 {
-    public $modes;
-    public $filters;
+    public array $modes;
+    public array $filters;
 
     public function init()
     {
